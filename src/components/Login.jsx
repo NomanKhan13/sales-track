@@ -2,7 +2,7 @@ import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 import { useState, useRef } from 'react';
 import { PhoneNumberUtil } from 'google-libphonenumber';
-import { LoaderCircle } from 'lucide-react';
+import { Link, LoaderCircle, Store, StoreIcon } from 'lucide-react';
 import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth';
 import { auth } from '../utils/firebase.js'; // Ensure Firebase is initialized correctly
 
@@ -106,7 +106,9 @@ const Login = () => {
 
   return (
     <div>
+      <header>
       <Navbar />
+      </header>
       <div className="px-6 pt-24">
         <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
           Sign In with Phone Number
