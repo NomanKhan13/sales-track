@@ -1,8 +1,8 @@
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { PhoneNumberUtil } from 'google-libphonenumber';
-import { Link, LoaderCircle, Store, StoreIcon } from 'lucide-react';
+import { LoaderCircle } from 'lucide-react';
 import { signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth';
 import { auth } from '../utils/firebase.js'; // Ensure Firebase is initialized correctly
 
@@ -19,6 +19,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const confirmationResultRef = useRef(null); // Secure storage for confirmation result
 
+  // Check if the phone number is valid
   const isPhoneValid = (phone) => {
     try {
       const parsed = phoneUtil.parseAndKeepRawInput(phone);
@@ -28,20 +29,29 @@ const Login = () => {
     }
   };
 
+  // Initialize reCAPTCHA on component mount
   const initializeRecaptcha = () => {
-    if (!window.recaptchaVerifier) {
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier.render();
+    } else {
       window.recaptchaVerifier = new RecaptchaVerifier(
         auth,
-        'recaptcha-container',
+        'recaptcha-container', // Specify the container for reCAPTCHA
         {
-          size: 'invisible',
+          size: 'normal', // Change size to 'normal' to make it a visible checkbox
           callback: () => {
             console.log('reCAPTCHA solved, ready to send OTP');
           },
-        }
+        },
+
       );
     }
   };
+
+  useEffect(() => {
+    // Initialize reCAPTCHA when the component mounts
+    initializeRecaptcha();
+  }, []);
 
   const sendOTP = async (e) => {
     e.preventDefault();
@@ -56,9 +66,7 @@ const Login = () => {
     }
 
     try {
-      initializeRecaptcha(); // Initialize reCAPTCHA
       const appVerifier = window.recaptchaVerifier;
-
       const formattedPhone = phone; // Ensure phone is in E.164 format (+<country-code><number>)
       const confirmationResult = await signInWithPhoneNumber(
         auth,
@@ -107,14 +115,14 @@ const Login = () => {
   return (
     <div>
       <header>
-      <Navbar />
+        <Navbar />
       </header>
       <div className="px-6 pt-24">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
+        {!otpSent && <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
           Sign In with Phone Number
-        </h2>
+        </h2>}
 
-        <div className="max-w-md mx-auto bg-white p-6 space-y-6">
+        <div className="max-w-md mx-auto bg-white py-4 space-y-6">
           {!otpSent && (
             <form className="space-y-4" onSubmit={sendOTP}>
               <div>
@@ -140,11 +148,10 @@ const Login = () => {
                     {successMessage}
                   </div>
                 )}
+              {/* reCAPTCHA container */}
               </div>
-              <div
-                id="recaptcha-container"
-                className="recaptcha-container"
-              ></div>
+
+              <div id="recaptcha-container" className="recaptcha-container"></div>
 
               <Button
                 btnText={isLoading ? 'Loading...' : 'Request OTP'}
@@ -183,6 +190,7 @@ const Login = () => {
                   </div>
                 )}
               </div>
+
               <Button
                 btnText={isLoading ? 'Loading...' : 'Verify OTP'}
                 btnBg="bg-blue-500"

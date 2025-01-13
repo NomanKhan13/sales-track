@@ -11,10 +11,17 @@ export default {
         bangers: ['Bangers', 'sreif'],
       },
       colors: {
-        primary: colors.amber[500],
+        primary: colors.blue[500],
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', display: "none" },
+          '100%': { opacity: '1', display: "flex" },
+        },
       },
       animation: {
         'spin-slow': 'spin 1.25s linear infinite',
+        fadeIn: "fadeIn 0.5s ease-in-out"
       },
     },
   },

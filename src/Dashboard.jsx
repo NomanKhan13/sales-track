@@ -1,15 +1,18 @@
 import { Link } from 'react-router';
 import Navbar from './components/Navbar';
-import { Package, FileText, TrendingUp } from 'lucide-react';
+import { Package, FileText, TrendingUp, ReceiptIndianRupee, ChartNoAxesCombined } from 'lucide-react';
 
 const Dashboard = () => {
+
+  
+
   return (
-    <div className="bg-gray-50 font-roboto min-h-screen">
+    <div className="bg-blue-50 font-roboto min-h-screen">
       {/* Navbar */}
       <Navbar />
 
       {/* Welcome Message */}
-      <div className="pt-12 px-4 pb-8 bg-gradient-to-b from-blue-50 to-gray-50 shadow-sm">
+      <div className="pt-12 px-4 pb-8 shadow-sm">
         <h2 className="text-2xl font-poppins font-semibold text-gray-800">
           Welcome Back, Jayesh!
         </h2>
@@ -23,7 +26,7 @@ const Dashboard = () => {
         {/* Manage Stock Card */}
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-all">
           <div className="flex items-center gap-2">
-            <Package className="text-blue-500 text-4xl" />
+            <Package className="text-purple-500 text-4xl" />
             <h3 className="text-gray-800 text-xl font-medium">Manage Stock</h3>
           </div>
           <p className="text-gray-600 mt-2 leading-relaxed">
@@ -31,10 +34,10 @@ const Dashboard = () => {
           </p>
           <p className="text-gray-700 mt-2 font-medium">
             Out of Stock:{' '}
-            <span className="text-blue-600 font-semibold">6 Items</span>
+            <span className="text-purple-600 font-semibold">6 Items</span>
           </p>
           <Link to="/store-stock">
-            <button className="text-white py-2 mt-4 rounded-lg bg-blue-600 hover:bg-blue-700 transition-all w-full">
+            <button className="text-white py-2 mt-4 rounded-lg bg-purple-600 hover:bg-purple-700 transition-all w-full">
               View Stock
             </button>
           </Link>
@@ -43,7 +46,7 @@ const Dashboard = () => {
         {/* Generate Bill Card */}
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-all">
           <div className="flex items-center gap-2">
-            <FileText className="text-green-500 text-4xl" />
+            <ReceiptIndianRupee className="text-green-500 text-4xl" />
             <h3 className="text-gray-800 text-xl font-medium">Generate Bill</h3>
           </div>
           <p className="text-gray-600 mt-2 leading-relaxed">
@@ -59,7 +62,7 @@ const Dashboard = () => {
         {/* View Sales Card */}
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-all">
           <div className="flex items-center gap-2">
-            <TrendingUp className="text-yellow-500 text-4xl" />
+            <ChartNoAxesCombined className="text-yellow-500 text-4xl" />
             <h3 className="text-gray-800 text-xl font-medium">View Sales</h3>
           </div>
           <p className="text-gray-600 mt-2 leading-relaxed">

@@ -18,8 +18,8 @@ const Button = ({
       className={twMerge(
         clsx(
           `w-full hover:brightness-75 py-2 uppercase rounded-md flex justify-center items-center gap-2`,
-          btnBg,
-          btnColor
+          btnColor,
+          disabled ? 'bg-slate-100 border border-gray-400 text-gray-400 cursor-not-allowed' : btnBg
         ),
         customStyles
       )}
