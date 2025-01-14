@@ -1,29 +1,34 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { setLogLevel } from "firebase/app";
+import { getDatabase } from "firebase/database";
+
+// Initialize Realtime Database
 
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyAkPMVvoCNSwCzSWBCa4h9IalKU64fLPYI',
-  authDomain: 'maa-shakti-fireworks.firebaseapp.com',
-  projectId: 'maa-shakti-fireworks',
-  storageBucket: 'maa-shakti-fireworks.firebasestorage.app',
-  messagingSenderId: '648003914896',
-  appId: '1:648003914896:web:a7130d2dd70033acbf9c15',
-  measurementId: 'G-PDQSPJ6YE0',
+  apiKey: "AIzaSyAkPMVvoCNSwCzSWBCa4h9IalKU64fLPYI",
+  authDomain: "maa-shakti-fireworks.firebaseapp.com",
+  databaseURL: "https://maa-shakti-fireworks-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "maa-shakti-fireworks",
+  storageBucket: "maa-shakti-fireworks.firebasestorage.app",
+  messagingSenderId: "648003914896",
+  appId: "1:648003914896:web:a7130d2dd70033acbf9c15",
+  measurementId: "G-PDQSPJ6YE0"
 };
 
-// Initialize Firebase
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+// Set Firebase debug log level
+setLogLevel("debug");
 
-const analytics = getAnalytics(app);
+// Initialize auth
+const auth = getAuth(app);
+
+// Initialize Firestore
+// const db = getFirestore(app);
+const db = getDatabase(app);
+
+export { auth, db };

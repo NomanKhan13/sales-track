@@ -1,14 +1,14 @@
-import { Store, TrendingUp, UserCircle } from 'lucide-react';
+import { TrendingUp, UserCircle } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { UserContext } from "../contexts/UserContext";
 import {signOut} from "firebase/auth";
 import {auth} from "../utils/firebase.js";
 
-const Navbar = () => {
+const Navbar = ({username}) => {
 
   const navigate = useNavigate();
-  const { setUser, userLoading, setUserLoading } = useContext(UserContext);
+  const { setUser, setUserLoading } = useContext(UserContext);
   const [openDropdown, setOpenDropdown] = useState(false);
 
   const logout = async () => {
@@ -24,7 +24,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="bg-white shadow shadow-blue-100 relative mb-8">
+    <header className="bg-white shadow shadow-blue-100 relative">
       <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <Link to="/" className="flex gap-2 items-end">
@@ -41,12 +41,12 @@ const Navbar = () => {
           }>
           <UserCircle size={32} />
           <span className="text-gray-600 font-medium">
-            Jayesh
+            {username || "Guest"}
           </span>
         </div>
       </div>
       {openDropdown &&
-      <div className='bg-blue-600 w-full border-t border-gray-200 animate-fadeIn p-2 absolute flex justify-end'><button className='px-3 py-1 bg-red-500 text-white rounded-md'onClick={logout}>logout</button></div>}
+      <div className='bg-blue-500 w-full border-t border-gray-200 animate-fadeIn p-2 absolute flex justify-end'><button className='px-3 py-1 bg-red-500 text-white rounded-md'onClick={logout}>logout</button></div>}
     </header>
   );
 };

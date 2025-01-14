@@ -26,7 +26,7 @@ const StockManagement = () => {
   };
 
   return (
-    <div className="p-2">
+    <div className="p-2 bg-blue-50">
       <Search onSearchSubmit={onSearchSubmit} queried={queried} />
       <ProductGrid status={status} data={data} />
     </div>

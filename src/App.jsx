@@ -1,46 +1,71 @@
 import { useContext, useEffect, useState } from 'react';
-import { auth } from './utils/firebase';
+import { auth, db } from './utils/firebase';
 import { UserContext } from './contexts/UserContext';
 import UnauthenticatedApp from './Unauthenticated-app';
 import AuthenticatedApp from './Authenticated-app';
 import { onAuthStateChanged } from 'firebase/auth';
 import { LoaderCircle } from 'lucide-react';
+import { get, ref } from 'firebase/database';
+import ShopSetup from './components/ShopSetup';  // Ensure this is imported
 
 function App() {
-  const { user, setUser, userLoading, setUserLoading } = useContext(UserContext);
-
-  // Local state to track the loading of Firebase authentication
-  const [authLoading, setAuthLoading] = useState(true);
+  const { user, setUser } = useContext(UserContext);
+  const [appLoading, setAppLoading] = useState(true);
+  const [shopExist, setShopExist] = useState(false);
+  const [checkingShop, setCheckingShop] = useState(false); // New state for shop check
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUserLoading(true); // Start loading user data
+      setAppLoading(true);
+
       if (user) {
-        setUser(user); // User is logged in, update context
+        setUser(user);
       } else {
-        setUser(null); // User is logged out, update context
+        setUser(null);
       }
-      setUserLoading(false); // Stop loading user data
-      setAuthLoading(false); // Firebase auth state has been determined
+
+      setAppLoading(false);
     });
 
-    // Cleanup the listener on unmount
     return () => unsubscribe();
   }, []);
 
-  // Ensure we wait for auth state to be determined before rendering
-  if (authLoading) {
-    return <div className='w-screen h-screen flex justify-center items-center text-primary animate-spin'>
-      <LoaderCircle className='h-12 w-12' />
-    </div>;
+  useEffect(() => {
+    const checkShop = async () => {
+      if (!user) return;  // Ensure user is authenticated
+      
+      setCheckingShop(true); // Set checkingShop to true before fetching
+      const shopRef = ref(db, `shops/${user.uid}`);
+      const shopSnap = await get(shopRef);
+      if (shopSnap.exists()) {
+        setShopExist(true);
+      } else {
+        setShopExist(false);
+      }
+      setCheckingShop(false); // Reset checkingShop once fetch completes
+    };
+    
+    checkShop();
+  }, [user]);
+
+  // If still loading auth or checking shop existence
+  if (appLoading || checkingShop) {
+    return (
+      <div className='w-screen h-screen flex justify-center items-center text-primary animate-spin'>
+        <LoaderCircle className='h-12 w-12' />
+      </div>
+    );
+  }
+  
+  if (user && shopExist) {
+    return <AuthenticatedApp />;
+  }
+  
+  if (user && !shopExist) {
+    return <ShopSetup setShopExist={setShopExist} />;
   }
 
-  // Show the appropriate app depending on whether the user is logged in or not
-  return (
-    <>
-      {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
-    </>
-  );
+  return <UnauthenticatedApp />;
 }
 
 export default App;

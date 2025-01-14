@@ -37,7 +37,7 @@ const PhoneAuth = () => {
         }
         window.recaptchaVerifier = new RecaptchaVerifier(
             auth,
-            'recaptcha-container', // Specify the container for reCAPTCHA
+            'g-recaptcha', // Specify the container for reCAPTCHA
             {
                 size: 'normal', // Change size to 'normal' to make it a visible checkbox
                 callback: () => {
@@ -147,7 +147,8 @@ const PhoneAuth = () => {
                     {errorMessage && <div className="text-red-500">{errorMessage}</div>}
                     <div className="flex justify-center">
 
-                        <div id="recaptcha-container" className="recaptcha-container"></div>
+                        <div id="g-recaptcha" className="g-recaptcha" data-sitekey="6Ldu_7YqAAAAAA4g2gjP9N76lzC8sY-NmikYD3hq"></div>
+
                     </div>
 
                     <Button
