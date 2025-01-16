@@ -8,7 +8,7 @@ const Dashboard = () => {
 
   return (
     <div className="bg-blue-50 font-roboto min-h-screen px-4">
-       <div className="pt-14 pb-10 shadow-sm">
+       <div className="py-10 shadow-sm">
           <h2 className="text-2xl font-poppins font-semibold text-gray-800">
             Welcome Back, {username}!
           </h2>
@@ -18,7 +18,7 @@ const Dashboard = () => {
         </div>
 
         {/* Action Cards */}
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-8">
           {/* Manage Stock Card */}
           <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-all">
             <div className="flex items-center gap-2">
@@ -28,10 +28,10 @@ const Dashboard = () => {
             <p className="text-gray-600 mt-2 leading-relaxed">
               Check items in stock, track low inventory, and reorder seamlessly.
             </p>
-            <p className="text-gray-700 mt-2 font-medium">
+            {/* <p className="text-gray-700 mt-2 font-medium">
               Out of Stock:{' '}
               <span className="text-purple-600 font-semibold">6 Items</span>
-            </p>
+            </p> */}
             <Link to="store-stock">
               <button className="text-white py-2 mt-4 rounded-lg bg-purple-600 hover:bg-purple-700 transition-all w-full">
                 View Stock
@@ -65,10 +65,10 @@ const Dashboard = () => {
               Analyze your sales trends and track daily, weekly, and monthly
               performance.
             </p>
-            <p className="text-gray-700 mt-2 font-medium">
+            {/* <p className="text-gray-700 mt-2 font-medium">
               Today's Sales:{' '}
               <span className="text-yellow-600 font-semibold">₹1,00,000</span>
-            </p>
+            </p> */}
             <Link to="view-sales">
               <button className="text-white py-2 mt-4 rounded-lg bg-yellow-600 hover:bg-yellow-700 transition-all w-full">
                 View Details

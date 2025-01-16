@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { get, ref } from "firebase/database";
 import { Outlet } from "react-router";
 import { db, auth } from "./utils/firebase.js";
 import Navbar from "../src/components/Navbar";
+import { UserContext } from "./contexts/UserContext.jsx";
 
 const AppLayout = () => {
   const [username, setUsername] = useState("");
+  const {user} = useContext(UserContext);
 
   useEffect(() => {
     const fetchUsername = async () => {
-      const userRef = ref(db, `shops/${auth.currentUser.uid}`);
+      if (!user) return;
+      const userRef = ref(db, `shops/${user.uid}`);
       const userSnap = await get(userRef);
       if (userSnap.exists()) {
         setUsername(userSnap.val().shopOwner);

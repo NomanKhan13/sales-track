@@ -1,15 +1,17 @@
 import { get, ref } from "firebase/database";
-import { Plus } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import { CircleArrowLeft, Plus } from "lucide-react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { Link } from "react-router"; // Fixed import
 import { db } from "./utils/firebase";
 import { UserContext } from "./contexts/UserContext";
+import Fuse from "fuse.js";
 
 const StockManagement = () => {
   const { user } = useContext(UserContext);
   const [inventory, setInventory] = useState([]);
   const [inventoryLoading, setInventoryLoading] = useState(true);
-  console.log(inventory)
+  const [searchResults, setSearchResults] = useState([]);
+  const fuseRef = useRef(null); // Store the Fuse instance
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -23,9 +25,14 @@ const StockManagement = () => {
           setInventory([]);
         } else {
           const inventoryData = inventorySnap.val();
-          console.log(inventoryData);
-          setInventory(Object.entries(inventoryData).map(([key,value]) => ({id: key, ...value})));
-          
+          const parsedInventory = Object.entries(inventoryData).map(([key, value]) => ({ id: key, ...value }));
+          setInventory(parsedInventory);
+          setSearchResults(parsedInventory); // Initialize search results with full inventory
+          // Initialize Fuse.js
+          fuseRef.current = new Fuse(parsedInventory, {
+            keys: ["name", "company"],
+            threshold: 0.4,
+          });
         }
       } catch (error) {
         console.error("Error fetching inventory:", error);
@@ -36,6 +43,20 @@ const StockManagement = () => {
 
     fetchInventory();
   }, [user]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const searchTerms = e.target.search.value.trim().split("#");
+    
+    if (searchTerms.length === 1 && !searchTerms[0]) {
+      setSearchResults(inventory); // Reset to full inventory if search is empty
+    } else {
+        const allResults = searchTerms.map((term) => fuseRef.current.search(term)).flat().map(result => result.item);
+        setSearchResults(allResults); 
+    }
+
+
+  };
 
   const handleEditProduct = (id) => {
     console.log(`Edit product with ID: ${id}`);
@@ -48,23 +69,27 @@ const StockManagement = () => {
   return (
     <main className="min-h-screen bg-purple-50 container mx-auto p-4">
       {/* Page Title */}
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Manage Stock</h2>
+
+      <h2 className="text-2xl font-semibold text-purple-600 mb-10 mt-2 flex items-center">
+        <Link to="/"><CircleArrowLeft size={32} /></Link> <span className="flex-1 text-center">Manage Stock</span>
+      </h2>
 
       {/* Search Bar */}
-      <div className="mb-6">
+      <form onSubmit={handleSearch} className="mb-4">
         <label
           htmlFor="search"
-          className="block text-sm font-medium text-gray-700 pb-2"
+          className="sr-only"
         >
           Search for a product
         </label>
         <input
           id="search"
           type="search"
+          name="search"
           placeholder="Enter product name..."
           className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
         />
-      </div>
+      </form>
 
       {inventoryLoading ? (
         <div className="min-h-screen space-y-6 container">
@@ -75,7 +100,7 @@ const StockManagement = () => {
             ></div>
           ))}
         </div>
-      ) : inventory.length === 0 ? (
+      ) : searchResults.length === 0 ? (
         <div className="text-center text-gray-500">
           <p className="mb-4 text-lg font-medium">
             No products found. Start by adding your inventory.
@@ -90,12 +115,11 @@ const StockManagement = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {inventory.map((item) => (
+          {searchResults.map((item) => (
             <div
               key={item.id}
-              className={`flex flex-col bg-white shadow-md rounded-md p-6 border ${
-                item.quantity === 0 ? "border-red-500" : "border-gray-200"
-              }`}
+              className={`flex flex-col bg-white shadow-md rounded-md p-6 border ${item.quantity === 0 ? "border-red-500" : "border-gray-200"
+                }`}
             >
               {/* Company Name */}
               <p className="text-xs italic text-gray-500 mb-2">{item.company}</p>

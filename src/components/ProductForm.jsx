@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import {  CircleArrowLeft, LoaderCircle, Plus, Save } from "lucide-react";
+import { CircleArrowLeft, LoaderCircle, Plus, Save } from "lucide-react";
 import { UserContext } from "../contexts/UserContext";
 import { get, push, ref, set, update } from "firebase/database";
 import { db } from "../utils/firebase";
@@ -9,8 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 const ProductForm = () => {
   const naviagte = useNavigate();
-  
-  
+
   const [product, setProduct] = useState({
     name: "",
     company: "",
@@ -22,6 +21,7 @@ const ProductForm = () => {
   const { user } = useContext(UserContext);
 
   const { productId } = useParams();
+
 
   useEffect(() => {
     if (productId) {
@@ -43,10 +43,10 @@ const ProductForm = () => {
       console.log(`Fetching product with productId: ${productId}`);
     }
   }, [productId]);
-  
+
   const notify = (inputPromise) => {
     toast.promise(
-      inputPromise, 
+      inputPromise,
       {
         pending: 'Adding product...',
         success: 'Product added successfully 👍',
@@ -57,12 +57,12 @@ const ProductForm = () => {
       }
     );
   }
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) return;
     const shopId = user.uid;
-  
+
     let inputPromise;
     if (productId) {
       console.log("Updating product:", product);
@@ -78,7 +78,9 @@ const ProductForm = () => {
       try {
         setLoading(true);
         const inventoryRef = ref(db, `shops/${shopId}/inventory`);
-        inputPromise = push(inventoryRef, product);
+        inputPromise = push(inventoryRef, { ...product, createdAt: Timestamp.now().toDate().toISOString() });
+        console.log(Timestamp.now().toDate().toISOString());
+        console.log("run run")
         setProduct({
           name: "",
           company: "",
@@ -89,14 +91,14 @@ const ProductForm = () => {
         console.log("Error while adding new product", error);
       }
     }
-  
+
     if (inputPromise) {
       notify(inputPromise); // Call notify with the promise
     }
-  
+
     setLoading(false);
   };
-  
+
 
   return (
     <main className="min-h-screen bg-purple-50 container mx-auto p-4">
@@ -192,9 +194,27 @@ const ProductForm = () => {
         </button>
         }
       </form>
-      <ToastContainer position="bottom-center"/>
+      <ToastContainer position="bottom-center" pauseOnFocusLoss={false} />
     </main>
   );
 };
 
 export default ProductForm;
+
+
+// const isoDate = "2025-01-16T10:20:30.456Z";
+// const date = new Date(isoDate); // Convert ISO string to Date object
+
+// // Format the date as needed
+// const readableDate = date.toLocaleString("en-US", {
+//   weekday: "long", // Full name of the day
+//   year: "numeric", // Four-digit year
+//   month: "long",   // Full name of the month
+//   day: "numeric",  // Day of the month
+//   hour: "2-digit", // Hour
+//   minute: "2-digit", // Minutes
+//   second: "2-digit", // Seconds
+//   hour12: true, // Use 12-hour format (AM/PM)
+// });
+
+// console.log(readableDate);

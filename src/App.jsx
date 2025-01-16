@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
-import { auth, db } from './utils/firebase';
-import { UserContext } from './contexts/UserContext';
-import UnauthenticatedApp from './Unauthenticated-app';
-import AuthenticatedApp from './Authenticated-app';
-import { onAuthStateChanged } from 'firebase/auth';
-import { LoaderCircle } from 'lucide-react';
+import { lazy, useContext, useEffect, useState } from 'react';
 import { get, ref } from 'firebase/database';
-import ShopSetup from './components/ShopSetup';  // Ensure this is imported
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from './utils/firebase';
+import { LoaderCircle } from 'lucide-react';
+import { UserContext } from './contexts/UserContext';
+const UnauthenticatedApp = lazy(() => import("./Unauthenticated-app"));
+const AuthenticatedApp = lazy(() => import("./Authenticated-app"));
+const ShopSetup = lazy(() => import("./components/ShopSetup"));  
 
 function App() {
   const { user, setUser } = useContext(UserContext);
