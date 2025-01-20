@@ -5,7 +5,7 @@ import Dashboard from "./Dashboard";
 import ProductForm from './components/ProductForm';
 
 const StockManagement = lazy(() => import("./StockManagement"));
-const BillGeneration = lazy(() => import("./BillGeneration"));
+const BillGeneration = lazy(() => import("../src/components/Billing/BillGeneration"));
 const StoreSales = lazy(() => import("./StoreSales"));
 
 const AuthenticatedApp = () => {

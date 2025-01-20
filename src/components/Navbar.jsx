@@ -24,8 +24,8 @@ const Navbar = ({username}) => {
   };
 
   return (
-    <header className="bg-white shadow shadow-blue-100 relative">
-      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
+    <header className="bg-white flex justify-center shadow shadow-blue-100 relative">
+      <div className="container flex justify-between items-center p-4">
         {/* Logo */}
         <Link to="/" className="flex gap-2 items-end">
           <TrendingUp size={28} className="text-blue-500" />

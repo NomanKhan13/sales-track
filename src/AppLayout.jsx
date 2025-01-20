@@ -7,7 +7,7 @@ import { UserContext } from "./contexts/UserContext.jsx";
 
 const AppLayout = () => {
   const [username, setUsername] = useState("");
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -24,9 +24,11 @@ const AppLayout = () => {
   return (
     <div>
       <Navbar username={username} />
-      <main>
-        <Outlet context={{ username }} />
-      </main>
+      <div className="bg-blue-50 flex items-center justify-center">
+        <main className="container">
+          <Outlet context={{ username }} />
+        </main>
+      </div>
     </div>
   );
 };
