@@ -25,7 +25,7 @@ const CustomerInfoForm = ({ onCustomerInfo, customerInfo }) => {
     }
 
     return (
-        <section className="p-4 min-h-screen">
+        <section className="min-h-screen">
             <section className="mt-6">
                 <h2 className="text-lg font-medium text-gray-600">
                     Step 1 of 3: Customer Information

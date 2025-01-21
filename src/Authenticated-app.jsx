@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router';
 import AppLayout from './AppLayout';
 import Dashboard from "./Dashboard";
 import ProductForm from './components/ProductForm';
+import CustomerInvoice from './components/Billing/CustomerInvoice';
 
 const StockManagement = lazy(() => import("./StockManagement"));
 const BillGeneration = lazy(() => import("../src/components/Billing/BillGeneration"));
@@ -18,6 +19,7 @@ const AuthenticatedApp = () => {
         <Route path="view-sales" element={<StoreSales />} />
         <Route path="add-product/" element={<ProductForm />} />
         <Route path="add-product/:productId" element={<ProductForm />} />
+        <Route path="customer-invoice/:billId" element={<CustomerInvoice />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

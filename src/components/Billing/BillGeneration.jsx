@@ -2,15 +2,17 @@ import { useContext, useState } from "react";
 import CustomerInfoForm from "./CustomerInfoForm";
 import CustomerProductsForm from "./CustomerProductsForm";
 import CustomerBillAndPayment from "./CustomerBillAndPayment";
-import CustomerInvoice from "./CustomerInvoice";
 import { UserContext } from "../../contexts/UserContext";
 import { push, ref } from "firebase/database";
 import { db } from "../../utils/firebase";
 import { toast, ToastContainer } from "react-toastify";
 import { Timestamp } from "firebase/firestore";
+import { Link, useNavigate } from "react-router";
+import { CircleArrowLeft } from "lucide-react";
 
 const BillGeneration = () => {
     const { user } = useContext(UserContext);
+    const navigate = useNavigate();
 
     // State variables
     const [formStep, setFormStep] = useState(1);
@@ -119,8 +121,9 @@ const BillGeneration = () => {
             const billPromise = push(billsRef, billData);
             notify(billPromise, "Bill generated successfully!", "Failed to generate bill!");
             await billPromise; // Wait for the promise to resolve
-            setFormStep(4); // Redirect to Invoice step only after success
-            setBillData(billData);
+            const billId = billPromise.key;
+            console.log(`/customer-invoice/${billId}`);
+            navigate(`/customer-invoice/${billId}`);
         } catch (error) {
             console.error("Error generating bill:", error);
             toast.error("An error occurred while generating the bill.");
@@ -128,7 +131,10 @@ const BillGeneration = () => {
     };
 
     return (
-        <section>
+        <section className="p-4">
+            <h2 className="text-2xl font-semibold text-green-600 mb-10 mt-2 flex items-center">
+                <Link to="/"><CircleArrowLeft size={32} /></Link> <span className="flex-1 text-center">Generate Bill</span>
+            </h2>
             {formStep === 1 && (
                 <CustomerInfoForm
                     customerInfo={customerInfo}
@@ -150,11 +156,7 @@ const BillGeneration = () => {
                     handleCustomerPayment={handleCustomerPayment}
                 />
             )}
-            {formStep === 4 && (
-                <CustomerInvoice
-                    billData={billData}
-                />
-            )}
+
             <ToastContainer position="bottom-center" pauseOnFocusLoss={false} />
         </section>
     );

@@ -1,60 +1,86 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { UserContext } from "./contexts/UserContext";
-import { get, ref } from "firebase/database";
+import { ref, query, orderByChild, equalTo, get, limitToLast } from "firebase/database";
 import { db } from "./utils/firebase";
+import { CircleArrowLeft } from "lucide-react";
+import BillsGrid from "./components/BillsGrid";
 
 const StoreSales = () => {
 
   const [billsLoading, setBillsLoading] = useState(true);
   const [bills, setBills] = useState(null);
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const shopId = user?.uid || null;
 
   useEffect(() => {
     const fetchBills = async () => {
-      if (!user) return;
-      const shopId = user.uid;
+      if (!shopId) return;
       try {
         const billsRef = ref(db, `shops/${shopId}/bills`);
         const billsSnap = await get(billsRef);
         if (!billsSnap.exists()) setBills([]);
         const billsData = billsSnap.val();
-        const billsArray = Object.entries(billsData).map(([key, value]) => ({id: key, ...value}));
+        const billsArray = Object.entries(billsData).map(([key, value]) => ({ id: key, ...value }));
         setBills(billsArray);
         setBillsLoading(false);
-      } catch (error){
+      } catch (error) {
         console.log(error)
       }
     }
     fetchBills();
-  }, [])
+  }, []);
+
+  const searchBillsByMobileNumber = async (e) => {
+    e.preventDefault();
+    const mobileNumber = e.target.elements["customerNumber"].value;
+    try {
+      setBillsLoading(true);
+      const billRef = ref(db, `shops/${shopId}/bills`);
+      let queryRef;
+      if (!mobileNumber) {
+        queryRef = query(billRef, limitToLast(10));
+      } else {
+        queryRef = query(billRef, orderByChild("customerInfo/customerNumber"), equalTo(mobileNumber));
+      }
+      const billSnap = await get(queryRef);
+      if (billSnap.exists()) {
+        const billsData = billSnap.val();
+        const billsArray = Object.entries(billsData).map(([key, value]) => ({ id: key, ...value }));
+        console.log("Matching Bills:", billsArray);
+        setBills(billsArray);
+      } else {
+        console.log("No matching bills found for the provided mobile number.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error searching for bills:", error);
+      throw error;
+    } finally {
+      setBillsLoading(false);
+    }
+  }
 
   if (billsLoading) return null;
 
   return (
-    <section className="p-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Recent Bills</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {bills.map((bill) => (
-          <Link to={`/customer-invoice/${bill.id}`} key={bill.id}>
-            <div
-              className="flex flex-col bg-white shadow-sm rounded-lg p-4 border hover:shadow-lg transition-all"
-            >
-              {/* Customer Name */}
-              <p className="text-xs text-gray-500">{bill.customerInfo.customerName}</p>
-
-              {/* Bill Date */}
-              <p className="text-sm text-gray-600 mt-2">{new Date(bill.createdBillAt).toLocaleDateString()}</p>
-
-              {/* Total Amount */}
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-sm text-gray-800 font-medium">Total:</span>
-                <span className="text-sm text-green-600 font-semibold">₹{bill.paymentInfo.grandTotal}</span>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+    <section className="p-4 min-h-screen">
+      <h2 className="text-2xl font-semibold text-amber-600 mb-10 mt-2 flex items-center">
+        <Link to="/"><CircleArrowLeft size={32} /></Link> <span className="flex-1 text-center">View Sales</span>
+      </h2>
+      <form onSubmit={searchBillsByMobileNumber} className="mb-6">
+        <label htmlFor="customerNumber" className="sr-only">
+          Search bill
+        </label>
+        <input
+          id="customerNumber"
+          name="customerNumber"
+          type="number"
+          placeholder="Search bill by Mobile Number"
+          className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+        />
+      </form>
+      <BillsGrid bills={bills} />
     </section>
   );
 };

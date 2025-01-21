@@ -39,7 +39,7 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
     }
 
     return (
-        <section className="p-4 min-h-screen bg-gray-50">
+        <section className="p-4 min-h-screen bg-gray-50 pb-16">
             <section className="mt-6">
                 <h2 className="text-lg font-medium text-gray-600">
                     Step 2 of 3: Add Products

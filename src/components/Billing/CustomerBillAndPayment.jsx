@@ -164,7 +164,7 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
             </div>
 
             <div className="flex fixed bottom-0 left-0 w-full border-t border-gray-900">
-                <button type="submit" onClick={() => setFormStep(2)} className="flex-1 text-gray-900 py-4 bg-gray-100 hover:bg-gray-300 transition-all">
+                <button onClick={() => setFormStep(2)} className="flex-1 text-gray-900 py-4 bg-gray-100 hover:bg-gray-300 transition-all">
                     Back
                 </button>
                 <button onClick={() => {handleCustomerPayment(paymentMode, discount, subTotal, grandTotal, amount.paidAmt, amount.pendingAmt)}}
