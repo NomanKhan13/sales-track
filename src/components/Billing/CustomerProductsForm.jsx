@@ -3,9 +3,9 @@ import { UserContext } from "../../contexts/UserContext";
 import { get, ref } from "firebase/database";
 import { db } from "../../utils/firebase";
 import Fuse from "fuse.js";
-import { Check, Plus } from "lucide-react";
+import { Check, Plus, Trash2 } from "lucide-react";
 
-const CustomerProductsForm = ({ setFormStep, handleAddProduct, customerProducts, handleUpdateQuantity }) => {
+const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerProducts }) => {
 
     const [searchedProducts, setSearchedProducts] = useState([]);
     const fuseRef = useRef(null);
@@ -76,7 +76,7 @@ const CustomerProductsForm = ({ setFormStep, handleAddProduct, customerProducts,
                                 <p className="text-sm text-gray-500">Price: ₹{product.price}</p>
                             </div>
                             <button
-                                onClick={() => handleAddProduct(product)}
+                                onClick={() => handleCustomerProducts(product, "ADD")}
                                 className="text-white py-1 px-4 bg-green-600 rounded-full hover:bg-green-700"
                             >
                                 {customerProducts.some((prod) => prod.id === product.id) ? (
@@ -102,17 +102,22 @@ const CustomerProductsForm = ({ setFormStep, handleAddProduct, customerProducts,
                 <ul>
                     {customerProducts.map((product) => (
                         <li key={product.id} className="flex justify-between items-center py-2 border-b">
-                            <div>
+                            <div className="flex-1">
                                 <p className="font-medium">{product.name}</p>
                                 <p className="text-sm text-gray-500">Price: ₹{product.price}</p>
                             </div>
-                            <input
-                                type="number"
-                                min="1"
-                                value={product.cartQty}
-                                onChange={(e) => handleUpdateQuantity(product.id, Number(e.target.value))}
-                                className="w-16 px-2 py-1 border rounded-md"
-                            />
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={product.cartQty}
+                                    onChange={(e) => handleCustomerProducts(product, "UPDATE" ,{qty: Number(e.target.value)})}
+                                    className="w-12 px-2 py-1 border rounded-md"
+                                />
+                                <button className="p-2 rounded-full bg-red-500" onClick={() => handleCustomerProducts(product, "REMOVE")}>
+                                    <Trash2 className="text-white" size={20} />
+                                </button>
+                            </div>
                         </li>
                     ))}
                 </ul>

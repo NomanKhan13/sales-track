@@ -1,4 +1,17 @@
-const CustomerInfoForm = ({ onCustomerInfo }) => {
+import { useState } from "react";
+
+const CustomerInfoForm = ({ onCustomerInfo, customerInfo }) => {
+
+    const [formInputs, setFormInputs] = useState(customerInfo || {
+        customerNumber: "",
+        customerName: "",
+        customerAddress: "",
+    });
+
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+        setFormInputs(prevState => ({...prevState, [name]: value}));
+    }
 
     const handleCustomerData = (e) => {
         e.preventDefault();
@@ -28,6 +41,8 @@ const CustomerInfoForm = ({ onCustomerInfo }) => {
                     <input
                         id="customerNumber"
                         name="customerNumber"
+                        value={formInputs.customerNumber}
+                        onChange={handleInputChange}
                         type="tel"
                         maxlength="10"
                         pattern="\d{10}"
@@ -48,6 +63,8 @@ const CustomerInfoForm = ({ onCustomerInfo }) => {
                     <input
                         id="customerName"
                         name="customerName"
+                        value={formInputs.customerName}
+                        onChange={handleInputChange}
                         type="text"
                         placeholder="Enter customer name"
                         required
@@ -64,12 +81,14 @@ const CustomerInfoForm = ({ onCustomerInfo }) => {
                         id="customerAddress"
                         name="customerAddress"
                         placeholder="Enter customer address"
+                        value={formInputs.customerAddress}
+                        onChange={handleInputChange}
                         type="text"
                         required
                         className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
                     />
                 </div>
-                <button type="submit" className="text-white py-2 mt-4 rounded-full bg-green-600 hover:bg-green-700 transition-all w-full">
+                <button type="submit" className="fixed bottom-0 left-0 text-white py-4 mt-4 bg-green-600 hover:bg-green-700 transition-all w-full">
                     Next
                 </button>
             </form>

@@ -47,12 +47,12 @@ const StockManagement = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     const searchTerms = e.target.search.value.trim().split("#");
-    
+
     if (searchTerms.length === 1 && !searchTerms[0]) {
       setSearchResults(inventory); // Reset to full inventory if search is empty
     } else {
-        const allResults = searchTerms.map((term) => fuseRef.current.search(term)).flat().map(result => result.item);
-        setSearchResults(allResults); 
+      const allResults = searchTerms.map((term) => fuseRef.current.search(term)).flat().map(result => result.item);
+      setSearchResults(allResults);
     }
 
 
@@ -118,27 +118,24 @@ const StockManagement = () => {
           {searchResults.map((item) => (
             <div
               key={item.id}
-              className={`flex flex-col bg-white shadow-md rounded-md p-6 border ${item.quantity === 0 ? "border-red-500" : "border-gray-200"
+              className={`flex flex-col bg-white shadow-sm rounded-lg p-4 border ${item.quantity === 0 ? "border-red-400" : "border-gray-200"
                 }`}
             >
-              {/* Company Name */}
-              <p className="text-xs italic text-gray-500 mb-2">{item.company}</p>
 
               {/* Product Name */}
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                {item.name}
-              </h3>
+              <h3 className="text-lg font-medium text-gray-800 truncate">{item.name}</h3>
+              
+              {/* Company Name */}
+              <p className="text-sm text-gray-400">{item.company}</p>
 
               {/* Price and Quantity */}
-              <div className="flex-grow">
+              <div className="flex justify-between items-center mt-4">
                 {/* Price */}
-                <p className="text-lg font-semibold text-green-600">
-                  ₹{item.price.toFixed(2)}
-                </p>
+                <p className="text-sm font-semibold text-green-500">₹{item.price.toFixed(2)}</p>
 
                 {/* Quantity */}
-                <p className="text-gray-600">
-                  <span className="font-medium">Quantity:</span>{" "}
+                <p className="text-sm">
+                  <span className="font-medium">Stock:</span>{" "}
                   {item.quantity === 0 ? (
                     <span className="text-red-500">Out of stock</span>
                   ) : (
@@ -151,12 +148,13 @@ const StockManagement = () => {
               <Link to={`/add-product/${item.id}`}>
                 <button
                   onClick={() => handleEditProduct(item.id)}
-                  className="mt-4 py-2 px-4 w-full rounded-md bg-purple-600 text-white hover:bg-purple-700 transition-all"
+                  className="mt-4 py-2 px-3 w-full rounded-md bg-purple-600 text-white text-sm font-medium hover:bg-purple-700 transition-all"
                 >
-                  Edit
+                  Edit Product
                 </button>
               </Link>
             </div>
+
           ))}
         </div>
       )}

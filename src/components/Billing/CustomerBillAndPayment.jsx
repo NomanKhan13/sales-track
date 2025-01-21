@@ -1,9 +1,39 @@
-const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, handleUpdateQuantity }) => {
+import { useState } from "react";
+
+const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, handleCustomerPayment }) => {
+    const [paymentMode, setPaymentMode] = useState("");
+    const [discount, setDiscount] = useState("");
+    const [amount, setAmount] = useState({
+        paidAmt: "",
+        pendingAmt: ""
+    });
+
+    const handleAmount = (e) => {
+        const { name, value } = e.target; // Get name and value from the event target
+        setAmount(prevState => ({
+            ...prevState,
+            [name]: value // Dynamically update the key using the name
+        }));
+    };
+
     console.log(customerInfo);
     const subTotal = customerProducts.reduce((acc, cusProd) => acc + (cusProd.price * cusProd.cartQty), 0).toFixed(2).toLocaleString('en-US', {
         style: 'currency',
         currency: 'USD',
     });
+
+    function calculateDiscount(amount, discountPercentage) {
+        if (amount < 0 || discountPercentage < 0 || discountPercentage > 100) {
+            return;
+        }
+
+        const discount = (amount * discountPercentage) / 100;
+        const finalAmount = amount - discount;
+
+        return finalAmount.toFixed(2)
+    }
+
+    const grandTotal = calculateDiscount(subTotal, discount);
 
     return (
         <section className="p-4 min-h-screen bg-gray-50 pb-20">
@@ -63,8 +93,8 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                         </label>
                         <select
                             id="paymentMode"
-                            // value={paymentMode}
-                            // onChange={handlePaymentModeChange}
+                            value={paymentMode}
+                            onChange={(e) => setPaymentMode(e.target.value)}
                             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-green-500"
                         >
                             <option value="" disabled>
@@ -84,12 +114,33 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                         <input
                             id="discount"
                             type="number"
-                            // value={discount}
-                            // onChange={handleDiscountChange}
+                            value={discount}
+                            onChange={(e) => setDiscount(e.target.value)}
                             placeholder="Enter discount"
                             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-green-500"
                         />
                     </div>
+
+
+                    <form className="mt-4 space-y-4">
+                        {/* Amount paid */}
+                        <div>
+                            <label htmlFor="paidAmt" className="block text-sm pb-2">
+                                Amount Paid
+                            </label>
+                            <input
+                                id="paidAmt"
+                                name="paidAmt"
+                                type="number"
+                                value={amount.paidAmt}
+                                onChange={handleAmount}
+                                placeholder="Enter amount paid by customer"
+                                required
+                                className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+                            />
+                        </div>
+                    </form>
+
 
                 </div>
             </section>
@@ -103,21 +154,22 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                     </p>
                     <p className="flex justify-between text-gray-600">
                         <span>Discount:</span>
-                        <span>{1 || 0} %</span>
+                        <span>{discount} %</span>
                     </p>
                     <p className="flex justify-between text-gray-800 font-medium">
                         <span>Grand Total:</span>
-                        <span>₹{(1 / 1300 * 100)}</span>
+                        <span>₹{grandTotal}</span>
                     </p>
                 </div>
             </div>
 
             <div className="flex fixed bottom-0 left-0 w-full border-t border-gray-900">
-                <button type="submit" onClick={() => setFormStep(1)} className="flex-1 text-gray-900 py-4 bg-gray-100 hover:bg-gray-300 transition-all">
+                <button type="submit" onClick={() => setFormStep(2)} className="flex-1 text-gray-900 py-4 bg-gray-100 hover:bg-gray-300 transition-all">
                     Back
                 </button>
-                <button type="submit" onClick={() => setFormStep(3)} className="flex-1 text-white py-4 bg-green-600 hover:bg-green-700 transition-all">
-                    Next
+                <button onClick={() => {handleCustomerPayment(paymentMode, discount, subTotal, grandTotal, amount.paidAmt, amount.pendingAmt)}}
+                    className="flex-1 text-white py-4 bg-green-600 hover:bg-green-700 transition-all">
+                    Generate Bill
                 </button>
             </div>
 
