@@ -13,6 +13,11 @@ const StockManagement = () => {
   const [searchResults, setSearchResults] = useState([]);
   const fuseRef = useRef(null);
 
+  const formatter = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+  });
+
   useEffect(() => {
     const fetchInventory = async () => {
       if (!user) return;
@@ -102,7 +107,7 @@ const StockManagement = () => {
               <h3 className="text-lg font-medium text-gray-800 truncate">{item.name}</h3>
               <p className="text-sm text-gray-400">{item.company}</p>
               <div className="flex justify-between items-center mt-4">
-                <p className="text-sm font-semibold text-green-500">₹{item.price.toFixed(2)}</p>
+                <p className="text-sm font-semibold text-green-500">{formatter.format(Number(item.price.toFixed(2)))}</p>
                 <p className="text-sm">
                   <span className="font-medium">Stock:</span>{" "}
                   {item.quantity === 0 ? (

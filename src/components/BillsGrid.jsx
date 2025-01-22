@@ -1,6 +1,12 @@
 import { Link } from "react-router";
 
 const BillsGrid = ({ bills }) => {
+
+    const formatter = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+    });
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {bills.map((bill) => (
@@ -17,7 +23,7 @@ const BillsGrid = ({ bills }) => {
                         {/* Total Amount */}
                         <div className="flex justify-between items-center mt-4">
                             <span className="text-sm text-gray-800 font-medium">Total:</span>
-                            <span className="text-sm text-green-600 font-semibold">₹{bill.paymentInfo.grandTotal}</span>
+                            <span className="text-sm text-green-600 font-semibold">{formatter.format(Number(bill.paymentInfo.grandTotal))}</span>
                         </div>
                     </div>
                 </Link>

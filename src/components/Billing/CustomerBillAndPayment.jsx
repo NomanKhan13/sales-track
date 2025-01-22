@@ -8,6 +8,11 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
         pendingAmt: ""
     });
 
+    const formatter = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+    });
+    
     const subTotal = customerProducts.reduce((acc, cusProd) => acc + (cusProd.price * cusProd.cartQty), 0).toFixed(2).toLocaleString('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -54,7 +59,7 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                 <p className="text-sm text-gray-600">
                     <span className="font-medium">Address:</span> {customerInfo.customerAddress}
                 </p>
-                <button className="mt-2 text-purple-600 hover:underline text-sm">
+                <button onClick={() => setFormStep(1)} className="mt-2 text-purple-600 hover:underline text-sm">
                     Edit Customer Details
                 </button>
             </section>
@@ -67,13 +72,13 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                         <div key={product.id} className="flex items-center justify-between bg-gray-50 p-4 rounded-md border border-gray-200">
                             <div>
                                 <p className="text-gray-800 font-medium">{product.name}</p>
-                                <p className="text-sm text-gray-500">₹{product.price} x {product.cartQty}</p>
+                                <p className="text-sm text-gray-500">{formatter.format(product.price)} x {product.cartQty}</p>
                             </div>
-                            <p className="text-purple-600 font-semibold">₹{Number(product.price) * Number(product.cartQty)}</p>
+                            <p className="text-purple-600 font-semibold">{formatter.format(Number(product.price) * Number(product.cartQty))}</p>
                         </div>
                     ))}
                 </ul>
-                <button className="mt-4 text-purple-600 hover:underline text-sm">
+                <button onClick={() => setFormStep(2)} className="mt-4 text-purple-600 hover:underline text-sm">
                     Edit Product details
                 </button>
             </section>
@@ -147,7 +152,7 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                 <div className="mt-4 space-y-2">
                     <p className="flex justify-between text-gray-600">
                         <span>Subtotal:</span>
-                        <span>₹{subTotal}</span>
+                        <span>{formatter.format(Number(subTotal))}</span>
                     </p>
                     <p className="flex justify-between text-gray-600">
                         <span>Discount:</span>
@@ -155,7 +160,7 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                     </p>
                     <p className="flex justify-between text-gray-800 font-semibold">
                         <span>Grand Total:</span>
-                        <span>₹{grandTotal}</span>
+                        <span>{formatter.format(Number(grandTotal))}</span>
                     </p>
                 </div>
             </section>

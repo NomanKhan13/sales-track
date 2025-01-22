@@ -32,6 +32,10 @@ const CustomerInvoice = () => {
         getBillData();
     }, [user, billId]);
 
+    const formatter = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+    });
     
     if (billLoading) {
         return (
@@ -115,11 +119,11 @@ const CustomerInvoice = () => {
                                         {product.name}
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                        ₹{product.price} x {product.cartQty}
+                                        {formatter.format(Number(product.price))} x {product.cartQty}
                                     </p>
                                 </div>
                                 <p className="text-green-600 font-semibold">
-                                    ₹{(product.price * product.cartQty).toFixed(2)}
+                                    {formatter.format((product.price * product.cartQty).toFixed(2))}
                                 </p>
                             </div>
                         ))
@@ -139,7 +143,7 @@ const CustomerInvoice = () => {
                         <span>Payment Mode:</span> <span>{paymentInfo.paymentMode || "N/A"}</span>
                     </p>
                     <p className="flex items-center justify-between text-base">
-                        <span>Subtotal:</span> <span>₹{paymentInfo.subTotal || "0.00"}</span>
+                        <span>Subtotal:</span> <span>{formatter.format(Number(paymentInfo.subTotal)) || "0.00"}</span>
                     </p>
                     <p className="flex items-center justify-between text-base">
                         <span>Discount:</span> <span>{paymentInfo.discount || "0"}%</span>
@@ -148,20 +152,20 @@ const CustomerInvoice = () => {
                     <p className="flex items-center justify-between">
                         <span className="font-medium text-gray-800">Amount Paid:</span>
                         <span className="font-semibold text-green-600">
-                            ₹{paymentInfo.paidAmt || "0.00"}
+                            {formatter.format(Number(paymentInfo.paidAmt)) || "0.00"}
                         </span>
                     </p>
                     <p className="flex items-center justify-between">
                         <span className="font-medium text-gray-800">Pending Amount:</span>
                         <span className="font-semibold text-red-600">
-                            {paymentInfo.pendingAmt > 0 ? `₹${Number(paymentInfo.pendingAmt).toFixed(2)}` : "₹0.00"}
+                            {formatter.format(Number(paymentInfo.pendingAmt)) > 0 ? formatter.format(Number(paymentInfo.pendingAmt).toFixed(2)) : "₹0.00"}
                         </span>
                     </p>
 
                     <p className="flex items-center justify-between border-t border-slate-300 pt-1">
                         <span className="font-medium text-gray-800">Grand Total:</span>
                         <span className="font-semibold text-2xl text-purple-600">
-                            ₹{paymentInfo.grandTotal || "0.00"}
+                            {formatter.format(Number(paymentInfo.grandTotal)) || "0.00"}
                         </span>
                     </p>
 

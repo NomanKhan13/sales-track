@@ -10,6 +10,11 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
     const fuseRef = useRef(null);
     const { user } = useContext(UserContext);
 
+    const formatter = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+    });
+
     useEffect(() => {
         const getInventory = async () => {
             if (!user) return;
@@ -58,7 +63,7 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
                         <li key={product.id} className="flex justify-between items-center py-2 border-b">
                             <div>
                                 <p className="font-medium">{product.name}</p>
-                                <p className="text-sm text-gray-500">Price: ₹{product.price}</p>
+                                <p className="text-sm text-gray-500">Price: {formatter.format(Number(product.price))}</p>
                             </div>
                             <button
                                 onClick={() => handleCustomerProducts(product, "ADD")}
@@ -89,7 +94,7 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
                         <li key={product.id} className="flex justify-between items-center py-2 border-b">
                             <div className="flex-1">
                                 <p className="font-medium">{product.name}</p>
-                                <p className="text-sm text-gray-500">Price: ₹{product.price}</p>
+                                <p className="text-sm text-gray-500">Price: {formatter.format(Number(product.price))}</p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <input
