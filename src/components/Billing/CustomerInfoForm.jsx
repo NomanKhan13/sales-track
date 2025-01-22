@@ -25,14 +25,8 @@ const CustomerInfoForm = ({ onCustomerInfo, customerInfo }) => {
     }
 
     return (
-        <section className="min-h-screen">
-            <section className="mt-6">
-                <h2 className="text-lg font-medium text-gray-600">
-                    Step 1 of 3: Customer Information
-                </h2>
-            </section>
-
-            <form className="mt-4 space-y-4" onSubmit={handleCustomerData}>
+        <section className="bg-white rounded-md shadow-md p-4">
+            <form className="mt-4 space-y-4 pb-4" onSubmit={handleCustomerData}>
                 {/* Customer Number */}
                 <div>
                     <label htmlFor="customerNumber" className="block text-sm pb-2">
@@ -48,7 +42,7 @@ const CustomerInfoForm = ({ onCustomerInfo, customerInfo }) => {
                         pattern="\d{10}"
                         placeholder="Enter customer phone number"
                         required
-                        className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                         onInput={(e) => {
                             e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Removes non-numeric characters
                         }}
@@ -68,7 +62,7 @@ const CustomerInfoForm = ({ onCustomerInfo, customerInfo }) => {
                         type="text"
                         placeholder="Enter customer name"
                         required
-                        className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                     />
                 </div>
 
@@ -85,10 +79,10 @@ const CustomerInfoForm = ({ onCustomerInfo, customerInfo }) => {
                         onChange={handleInputChange}
                         type="text"
                         required
-                        className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                     />
                 </div>
-                <button type="submit" className="fixed bottom-0 left-0 text-white py-4 mt-4 bg-green-600 hover:bg-green-700 transition-all w-full">
+                <button type="submit" className="fixed bottom-0 left-0 text-white py-4 mt-4 bg-purple-600 hover:bg-purple-700 transition-all w-full">
                     Next
                 </button>
             </form>

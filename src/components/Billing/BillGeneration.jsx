@@ -35,7 +35,7 @@ const BillGeneration = () => {
         customerProducts: "",
         paymentInfo: "",
         createdBillAt: "",
-    })
+    });
 
     const notify = (inputPromise, successMessage, errorMessage) => {
         toast.promise(
@@ -131,31 +131,51 @@ const BillGeneration = () => {
     };
 
     return (
-        <section className="p-4">
-            <h2 className="text-2xl font-semibold text-green-600 mb-10 mt-2 flex items-center">
-                <Link to="/"><CircleArrowLeft size={32} /></Link> <span className="flex-1 text-center">Generate Bill</span>
+        <section className="min-h-screen bg-purple-50 p-4 mb-20">
+            {/* Page Title */}
+            <h2 className="text-2xl font-semibold text-purple-700 mb-6 mt-4 flex items-center gap-2 justify-start">
+                <Link to="/">
+                    <CircleArrowLeft size={30} className="text-purple-700 hover:text-purple-600 transition-all" />
+                </Link>
+                <span className="mx-16">Generate Bill</span>
             </h2>
-            {formStep === 1 && (
-                <CustomerInfoForm
-                    customerInfo={customerInfo}
-                    onCustomerInfo={handleCustomerInfo}
-                />
-            )}
-            {formStep === 2 && (
-                <CustomerProductsForm
-                    setFormStep={setFormStep}
-                    handleCustomerProducts={handleCustomerProducts}
-                    customerProducts={customerProducts}
-                />
-            )}
-            {formStep === 3 && (
-                <CustomerBillAndPayment
-                    setFormStep={setFormStep}
-                    customerInfo={customerInfo}
-                    customerProducts={customerProducts}
-                    handleCustomerPayment={handleCustomerPayment}
-                />
-            )}
+
+            <div className="space-y-6">
+                <section className="mt-6">
+                    <h2 className="text-lg font-medium text-gray-600">
+                        {formStep == 1 && "Step 1 of 3: Customer Information"}
+                        {formStep == 2 && "Step 2 of 3: Add Products"}
+                        {formStep == 3 && "Step 3 of 3: Bill Review & Payment"}
+                    </h2>
+                </section>
+
+                {/* Form Step 1 - Customer Info */}
+                {formStep === 1 && (
+                    <CustomerInfoForm
+                        customerInfo={customerInfo}
+                        onCustomerInfo={handleCustomerInfo}
+                    />
+                )}
+
+                {/* Form Step 2 - Add Products */}
+                {formStep === 2 && (
+                    <CustomerProductsForm
+                        setFormStep={setFormStep}
+                        handleCustomerProducts={handleCustomerProducts}
+                        customerProducts={customerProducts}
+                    />
+                )}
+
+                {/* Form Step 3 - Review and Payment */}
+                {formStep === 3 && (
+                    <CustomerBillAndPayment
+                        setFormStep={setFormStep}
+                        customerInfo={customerInfo}
+                        customerProducts={customerProducts}
+                        handleCustomerPayment={handleCustomerPayment}
+                    />
+                )}
+            </div>
 
             <ToastContainer position="bottom-center" pauseOnFocusLoss={false} />
         </section>

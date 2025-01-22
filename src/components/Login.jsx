@@ -17,39 +17,31 @@ const Login = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const confirmationResultRef = useRef(null); // Secure storage for confirmation result
+  const confirmationResultRef = useRef(null);
 
-  // Check if the phone number is valid
   const isPhoneValid = (phone) => {
     try {
       const parsed = phoneUtil.parseAndKeepRawInput(phone);
       return phoneUtil.isValidNumber(parsed);
-    } catch (error) {
+    } catch {
       return false;
     }
   };
 
-  // Initialize reCAPTCHA on component mount
   const initializeRecaptcha = () => {
-    if (window.recaptchaVerifier) {
-      window.recaptchaVerifier.render();
-    } else {
+    if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        'recaptcha-container', // Specify the container for reCAPTCHA
+        'recaptcha-container',
         {
-          size: 'normal', // Change size to 'normal' to make it a visible checkbox
-          callback: () => {
-            console.log('reCAPTCHA solved, ready to send OTP');
-          },
+          size: 'normal',
+          callback: () => console.log('reCAPTCHA solved'),
         },
-
+        auth
       );
     }
   };
 
   useEffect(() => {
-    // Initialize reCAPTCHA when the component mounts
     initializeRecaptcha();
   }, []);
 
@@ -67,25 +59,17 @@ const Login = () => {
 
     try {
       const appVerifier = window.recaptchaVerifier;
-      const formattedPhone = phone; // Ensure phone is in E.164 format (+<country-code><number>)
       const confirmationResult = await signInWithPhoneNumber(
         auth,
-        formattedPhone,
+        phone,
         appVerifier
       );
-
-      confirmationResultRef.current = confirmationResult; // Store securely
+      confirmationResultRef.current = confirmationResult;
       setOtpSent(true);
-      setSuccessMessage('OTP sent successfully to your phone!');
+      setSuccessMessage('OTP sent successfully!');
     } catch (error) {
-      console.error('Error sending OTP:', error);
-      if (error.code === 'auth/captcha-check-failed') {
-        setErrorMessage(
-          'Failed reCAPTCHA verification. Please reload the page.'
-        );
-      } else {
-        setErrorMessage('Failed to send OTP. Please try again later.');
-      }
+      setErrorMessage('Failed to send OTP. Please try again.');
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -104,102 +88,83 @@ const Login = () => {
     try {
       const confirmationResult = confirmationResultRef.current;
       const result = await confirmationResult.confirm(otp);
-      console.log('User signed in successfully:', result.user);
-      setSuccessMessage('User signed in successfully!');
+      setSuccessMessage('Logged in successfully!');
+      console.log('User:', result.user);
     } catch (error) {
-      console.error('Invalid OTP:', error);
       setErrorMessage('Invalid OTP. Please try again.');
+      console.error(error);
     }
   };
 
   return (
     <div>
-      <header>
-        <Navbar />
-      </header>
+      <Navbar />
       <div className="px-6 pt-24">
-        {!otpSent && <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
-          Sign In with Phone Number
-        </h2>}
+        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
+          {otpSent ? 'Verify OTP' : 'Sign In with Phone Number'}
+        </h2>
 
-        <div className="max-w-md mx-auto bg-white py-4 space-y-6">
+        <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
           {!otpSent && (
-            <form className="space-y-4" onSubmit={sendOTP}>
-              <div>
-                <label htmlFor="phone-input" className="sr-only">
+            <form onSubmit={sendOTP}>
+              <div className="space-y-4">
+                <label htmlFor="phone-input" className="block text-sm font-medium text-gray-700">
                   Phone Number
                 </label>
                 <PhoneInput
-                  className="react-phone-input w-full rounded-md border border-gray-300 focus-within:ring-2 focus-within:ring-blue-500"
-                  inputClassName="react-international-phone__input w-full p-3 border-none rounded-md focus:outline-none"
+                  className="react-phone-input w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500"
+                  inputClassName="react-international-phone__input w-full p-3 border-none rounded-lg focus:outline-none"
                   buttonClassName="react-international-phone__select border-none"
                   defaultCountry="in"
                   value={phone}
-                  onChange={(phone) => setPhone(phone)}
-                  aria-labelledby="phone-input"
+                  onChange={(value) => setPhone(value)}
                 />
-                {errorMessage && (
-                  <div className="text-red-500 text-sm mt-2">
-                    {errorMessage}
-                  </div>
-                )}
-                {successMessage && (
-                  <div className="text-green-500 text-sm mt-2">
-                    {successMessage}
-                  </div>
-                )}
-              {/* reCAPTCHA container */}
+                {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+                {successMessage && <p className="text-green-500 text-sm">{successMessage}</p>}
+
+                <div id="recaptcha-container" className="mt-4"></div>
+
+                <Button
+                  btnText={isLoading ? 'Sending...' : 'Send OTP'}
+                  btnBg="bg-blue-500"
+                  btnColor="text-white"
+                  className="w-full py-3 rounded-lg text-lg font-medium transition hover:shadow-lg"
+                  btnIcon={isLoading && <LoaderCircle className="animate-spin" />}
+                  disabled={isLoading || !isPhoneValid(phone)}
+                  type="submit"
+                />
               </div>
-
-              <div id="recaptcha-container" className="recaptcha-container"></div>
-
-              <Button
-                btnText={isLoading ? 'Loading...' : 'Request OTP'}
-                btnBg="bg-blue-500"
-                btnColor="text-white"
-                className="w-full py-3 rounded-lg text-lg font-medium transition-shadow shadow-md hover:shadow-lg"
-                btnIcon={isLoading && <LoaderCircle className="animate-spin" />}
-                disabled={isLoading || !isPhoneValid(phone)}
-                type="submit"
-              />
             </form>
           )}
 
           {otpSent && (
-            <form className="space-y-4" onSubmit={verifyOTP}>
-              <div>
-                <label htmlFor="otp-input" className="sr-only">
+            <form onSubmit={verifyOTP}>
+              <div className="space-y-4">
+                <label htmlFor="otp-input" className="block text-sm font-medium text-gray-700">
                   One Time Password (OTP)
                 </label>
                 <input
                   type="text"
+                  id="otp-input"
                   maxLength={6}
-                  className="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  aria-labelledby="otp-input"
+                  className="w-full border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter OTP"
                 />
-                {errorMessage && (
-                  <div className="text-red-500 text-sm mt-2">
-                    {errorMessage}
-                  </div>
-                )}
-                {successMessage && (
-                  <div className="text-green-500 text-sm mt-2">
-                    {successMessage}
-                  </div>
-                )}
-              </div>
+                {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+                {successMessage && <p className="text-green-500 text-sm">{successMessage}</p>}
 
-              <Button
-                btnText={isLoading ? 'Loading...' : 'Verify OTP'}
-                btnBg="bg-blue-500"
-                btnColor="text-white"
-                className="w-full py-3 rounded-lg text-lg font-medium transition-shadow shadow-md hover:shadow-lg"
-                btnIcon={isLoading && <LoaderCircle className="animate-spin" />}
-                disabled={isLoading || otp.length !== 6}
-                type="submit"
-              />
+                <Button
+                  btnText={isLoading ? 'Verifying...' : 'Verify OTP'}
+                  btnBg="bg-blue-500"
+                  btnColor="text-white"
+                  className="w-full py-3 rounded-lg text-lg font-medium transition hover:shadow-lg"
+                  btnIcon={isLoading && <LoaderCircle className="animate-spin" />}
+                  disabled={isLoading || otp.length !== 6}
+                  type="submit"
+                />
+              </div>
             </form>
           )}
         </div>

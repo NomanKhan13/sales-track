@@ -8,55 +8,46 @@ import { Timestamp } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 
 const ProductForm = () => {
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
 
   const [product, setProduct] = useState({
     name: "",
     company: "",
-    price: 0,
-    quantity: 0,
+    price: "",
+    quantity: "",
   });
   const [loading, setLoading] = useState(false);
 
   const { user } = useContext(UserContext);
-
   const { productId } = useParams();
-
 
   useEffect(() => {
     if (productId) {
-      // Fetch product details for editing (e.g., from an API or state)
-      // Set product state with the fetched data
       const fetchProductWithId = async () => {
         if (!user) return;
         const shopId = user.uid;
         const productRef = ref(db, `shops/${shopId}/inventory/${productId}`);
         const productSnap = await get(productRef);
         if (!productSnap.exists()) {
-          naviagte("/add-product");
+          navigate("/add-product");
         } else {
           const productData = productSnap.val();
           setProduct(productData);
         }
-      }
+      };
       fetchProductWithId();
-      console.log(`Fetching product with productId: ${productId}`);
     }
-  }, [productId]);
+  }, [productId, user]);
 
   const notify = (inputPromise) => {
-    toast.promise(
-      inputPromise,
-      {
-        pending: 'Adding product...',
-        success: 'Product added successfully 👍',
-        error: 'An error occurred 🤯',
-      },
-      {
-        position: "bottom-center",
-      }
-    );
-  }
+    toast.promise(inputPromise, {
+      pending: 'Adding product...',
+      success: 'Product added successfully 👍',
+      error: 'An error occurred 🤯',
+    }, {
+      position: "bottom-center",
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,22 +56,18 @@ const ProductForm = () => {
 
     let inputPromise;
     if (productId) {
-      console.log("Updating product:", product);
       try {
         setLoading(true);
         const productRef = ref(db, `shops/${shopId}/inventory/${productId}`);
-        inputPromise = update(productRef, product); // Directly use the promise here
+        inputPromise = update(productRef, product);
       } catch (error) {
-        console.log("Error while updating product", error);
+        console.error("Error while updating product", error);
       }
     } else {
-      console.log("Adding new product:", product);
       try {
         setLoading(true);
         const inventoryRef = ref(db, `shops/${shopId}/inventory`);
         inputPromise = push(inventoryRef, { ...product, createdAt: Timestamp.now().toDate().toISOString() });
-        console.log(Timestamp.now().toDate().toISOString());
-        console.log("run run")
         setProduct({
           name: "",
           company: "",
@@ -88,28 +75,29 @@ const ProductForm = () => {
           quantity: 0,
         });
       } catch (error) {
-        console.log("Error while adding new product", error);
+        console.error("Error while adding new product", error);
       }
     }
 
     if (inputPromise) {
-      notify(inputPromise); // Call notify with the promise
+      notify(inputPromise);
     }
 
     setLoading(false);
   };
 
-
   return (
     <main className="min-h-screen bg-purple-50 container mx-auto p-4">
       {/* Page Title */}
-
-      <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center">
-        <Link to="/store-stock"><CircleArrowLeft size={32} /></Link> <span className="flex-1 text-center">{productId ? "Edit Product" : "Add New Product"}</span>
+      <h2 className="text-2xl font-semibold text-purple-700 mb-6 mt-4 flex items-center gap-2 justify-start">
+        <Link to="/">
+          <CircleArrowLeft size={30} className="text-purple-700 hover:text-purple-600 transition-all" />
+        </Link>
+        <span className="mx-16">{productId ? "Edit Product" : "Add Product"}</span>
       </h2>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="bg-white p-4 rounded-md shadow-md space-y-4">
+      <form onSubmit={handleSubmit} className="bg-white px-4 py-6 rounded-md shadow-md space-y-4">
         {/* Product Name */}
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 pb-2">
@@ -120,7 +108,7 @@ const ProductForm = () => {
             id="name"
             value={product.name}
             onChange={(e) => setProduct({ ...product, name: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
             placeholder="Enter product name"
             required
           />
@@ -136,7 +124,7 @@ const ProductForm = () => {
             id="company"
             value={product.company}
             onChange={(e) => setProduct({ ...product, company: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
             placeholder="Enter company name"
             required
           />
@@ -152,14 +140,14 @@ const ProductForm = () => {
             id="price"
             value={product.price}
             onChange={(e) => setProduct({ ...product, price: Number(e.target.value) })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
             placeholder="Enter price"
             required
           />
         </div>
 
         {/* Quantity */}
-        <div className="pb-8">
+        <div className="pb-6">
           <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 pb-2">
             Quantity
           </label>
@@ -168,53 +156,27 @@ const ProductForm = () => {
             id="quantity"
             value={product.quantity}
             onChange={(e) => setProduct({ ...product, quantity: Number(e.target.value) })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
             placeholder="Enter quantity"
             required
           />
         </div>
 
         {/* Save Button */}
-        {productId && <button
+        <button
           type="submit"
           disabled={loading}
-          className="w-full py-2 px-4 bg-purple-600 text-white rounded-md flex items-center justify-center shadow-lg hover:bg-purple-700 transition-all disabled:bg-slate-100 disabled:border disabled:border-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed"
+          className="fixed bottom-0 left-0 text-white py-4 mt-4 bg-purple-600 hover:bg-purple-700 transition-all w-full flex items-center justify-center hover:bg-purple-700 transition-all disabled:bg-slate-100 disabled:border disabled:border-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed"
         >
           {loading ? <LoaderCircle className="animate-spin" /> : <Save className="inline-block mr-2" />}
-          {loading ? "Updating Product" : "Update Product"}
-        </button>}
-
-        {!productId && <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-2 px-4 bg-purple-600 text-white rounded-md flex items-center justify-center shadow-lg hover:bg-purple-700 transition-all disabled:bg-slate-100 disabled:border disabled:border-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed"
-        >
-          {loading ? <LoaderCircle className="animate-spin" /> : <Save className="inline-block mr-2" />}
-          {loading ? "Adding Product" : "Add Product"}
+          {loading ? (productId ? "Updating Product" : "Adding Product") : (productId ? "Update Product" : "Add Product")}
         </button>
-        }
+
       </form>
+
       <ToastContainer position="bottom-center" pauseOnFocusLoss={false} />
     </main>
   );
 };
 
 export default ProductForm;
-
-
-// const isoDate = "2025-01-16T10:20:30.456Z";
-// const date = new Date(isoDate); // Convert ISO string to Date object
-
-// // Format the date as needed
-// const readableDate = date.toLocaleString("en-US", {
-//   weekday: "long", // Full name of the day
-//   year: "numeric", // Four-digit year
-//   month: "long",   // Full name of the month
-//   day: "numeric",  // Day of the month
-//   hour: "2-digit", // Hour
-//   minute: "2-digit", // Minutes
-//   second: "2-digit", // Seconds
-//   hour12: true, // Use 12-hour format (AM/PM)
-// });
-
-// console.log(readableDate);

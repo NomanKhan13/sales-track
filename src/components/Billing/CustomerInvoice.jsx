@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router";
+import { useOutletContext, useParams } from "react-router";
 import { UserContext } from "../../contexts/UserContext";
 import { get, ref } from "firebase/database";
 import { db } from "../../utils/firebase";
 import html2pdf from "html2pdf.js";
+import { LoaderCircle } from "lucide-react";
 
 const CustomerInvoice = () => {
     const { user } = useContext(UserContext);
     const { billId } = useParams();
+    const { shopData } = useOutletContext();
     const [billLoading, setBillLoading] = useState(true);
     const [billData, setBillData] = useState(null);
     const invoiceRef = useRef(null);
@@ -30,7 +32,14 @@ const CustomerInvoice = () => {
         getBillData();
     }, [user, billId]);
 
-    if (billLoading) return <div>Loading...</div>;
+    
+    if (billLoading) {
+        return (
+            <div className='w-screen h-[40rem] flex justify-center items-center text-purple-600'>
+                <LoaderCircle className='h-12 w-12 animate-spin' />
+            </div>
+        );
+    }
 
     if (!billData) return <div>Bill not found.</div>;
 
@@ -53,19 +62,19 @@ const CustomerInvoice = () => {
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-            pagebreak: { mode: 'avoid-all'}
+            pagebreak: { mode: 'avoid-all' }
         };
         html2pdf().set(opt).from(invoiceRef.current).save();
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen p-6" ref={invoiceRef}>
+        <div className="bg-purple-50 min-h-screen p-6" ref={invoiceRef}>
             {/* Header Section */}
             <div className="text-center mb-12">
                 <h1 className="text-3xl font-medium text-purple-600">
-                    Maa Shakti Fireworks
+                    {shopData.shopName}
                 </h1>
-                <p className="text-lg text-gray-700">Random Address, City, State</p>
+                <p className="text-lg text-gray-700">{shopData.shopLocation}</p>
                 <p className="text-base text-gray-500 mt-2">
                     Date & Time: {ISTDate}
                 </p>

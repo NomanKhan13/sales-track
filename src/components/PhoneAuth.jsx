@@ -37,9 +37,9 @@ const PhoneAuth = () => {
         }
         window.recaptchaVerifier = new RecaptchaVerifier(
             auth,
-            'g-recaptcha', // Specify the container for reCAPTCHA
+            'g-recaptcha', 
             {
-                size: 'normal', // Change size to 'normal' to make it a visible checkbox
+                size: 'normal',
                 callback: () => {
                     setRecaptchaVerifier(true);
                     console.log('reCAPTCHA solved, ready to send OTP');
@@ -49,7 +49,6 @@ const PhoneAuth = () => {
                     setRecaptchaVerifier(false);
                 },
             },
-
         );
 
         window.recaptchaVerifier.render().catch((error) => {
@@ -110,8 +109,8 @@ const PhoneAuth = () => {
         return () => {
             if (window.recaptchaVerifier) {
                 try {
-                    window.recaptchaVerifier.clear(); // Clear the widget
-                    delete window.recaptchaVerifier; // Remove the reference
+                    window.recaptchaVerifier.clear();
+                    delete window.recaptchaVerifier;
                     console.log("ReCAPTCHA cleared");
                 } catch (error) {
                     console.error("Error clearing reCAPTCHA:", error);
@@ -129,14 +128,14 @@ const PhoneAuth = () => {
     }
 
     return (
-        <div className="px-6 pt-24 h-screen bg-blue-50">
-            <TrendingUp className="text-blue-500 mx-auto h-32 w-32" />
-            <h2 className="text-2xl font-bold text-center mb-12">Welcome to SalesTrack</h2>
+        <div className="px-6 pt-24 h-screen bg-purple-50">
+            <TrendingUp className="text-purple-500 mx-auto h-32 w-32" />
+            <h2 className="text-2xl font-bold text-center mb-12 text-purple-700">Welcome to SalesTrack</h2>
 
             {!otpSent && (
                 <form className="space-y-4" onSubmit={sendOTP}>
                     <PhoneInput
-                        className="react-phone-input w-full rounded-md border border-gray-300 focus-within:ring-2 focus-within:ring-blue-500"
+                        className="react-phone-input w-full rounded-md border border-gray-300 focus-within:ring-2 focus-within:ring-purple-500"
                         inputClassName="react-international-phone__input w-full p-3 border-none rounded-md focus:outline-none"
                         buttonClassName="react-international-phone__select border-none"
                         defaultCountry="in"
@@ -146,14 +145,12 @@ const PhoneAuth = () => {
 
                     {errorMessage && <div className="text-red-500">{errorMessage}</div>}
                     <div className="flex justify-center">
-
                         <div id="g-recaptcha" className="g-recaptcha" data-sitekey="6Ldu_7YqAAAAAA4g2gjP9N76lzC8sY-NmikYD3hq"></div>
-
                     </div>
 
                     <Button
                         btnText={isLoading ? 'Sending OTP' : 'Request OTP'}
-                        btnBg="bg-blue-500"
+                        btnBg="bg-purple-500"
                         btnColor="text-white"
                         customStyles="w-full rounded-full transition-shadow shadow-md hover:shadow-lg"
                         btnIcon={isLoading && <LoaderCircle className="animate-spin" />}
@@ -165,18 +162,18 @@ const PhoneAuth = () => {
 
             {otpSent && (
                 <form onSubmit={verifyOTP} className="space-y-4">
-                    <h3>Enter 6-digit SMS code</h3>
+                    <h3 className="text-lg font-medium text-gray-600">Enter 6-digit SMS code</h3>
                     <input
                         type="text"
                         value={otp}
-                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))} // Enforce numeric input and 6 characters
-                        className="w-full p-3 rounded-md ring ring-gray-200 outline-none focus-within:ring-primary"
+                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        className="w-full p-3 rounded-md ring ring-gray-200 outline-none focus-within:ring-purple-500"
                     />
 
                     {errorMessage && <div className="text-red-500">{errorMessage}</div>}
                     <Button
-                        btnText={isLoading ? 'Verrifying OTP' : 'Verify OTP'}
-                        btnBg="bg-blue-500"
+                        btnText={isLoading ? 'Verifying OTP' : 'Verify OTP'}
+                        btnBg="bg-purple-500"
                         btnColor="text-white"
                         customStyles="w-full rounded-full transition-shadow shadow-md hover:shadow-lg"
                         btnIcon={isLoading && <LoaderCircle className="animate-spin" />}
@@ -185,8 +182,6 @@ const PhoneAuth = () => {
                     />
                 </form>
             )}
-
-         
         </div>
     );
 };

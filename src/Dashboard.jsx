@@ -3,79 +3,69 @@ import Navbar from './components/Navbar';
 import { Package, ReceiptIndianRupee, ChartNoAxesCombined } from 'lucide-react';
 
 const Dashboard = () => {
-
-  const {username} = useOutletContext();
+  const { shopData } = useOutletContext();
 
   return (
-    <div className="bg-blue-50 font-roboto min-h-screen px-4">
-       <div className="py-10 shadow-sm">
-          <h2 className="text-2xl font-poppins font-semibold text-gray-800">
-            Welcome Back, {username}!
-          </h2>
-          <p className="mt-2 text-gray-600">
-            Manage your store effortlessly and track everything in one place.
+    <div className="bg-gray-50 font-roboto min-h-screen px-4">
+      <div className="py-6 sm:py-10 shadow-sm">
+        <h2 className="text-xl sm:text-2xl font-poppins font-semibold text-gray-800">
+          Welcome Back, {shopData.shopOwner}!
+        </h2>
+        <p className="mt-2 text-sm sm:text-base text-gray-600">
+          Manage your <span className='font-medium text-md text-purple-600'>{shopData.shopName}</span> effortlessly and track everything in one place.
+        </p>
+      </div>
+
+      {/* Action Cards */}
+      <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 py-6 sm:py-10">
+        {/* Manage Stock Card */}
+        <div className="bg-purple-50 p-4 sm:p-6 rounded-lg border border-purple-200 shadow-md hover:shadow-lg transition-all">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Package className="text-purple-600 text-4xl sm:text-5xl" />
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Manage Stock</h3>
+          </div>
+          <p className="text-sm sm:text-base text-gray-600 mt-4 leading-relaxed">
+            Check items in stock, track low inventory, and reorder seamlessly.
           </p>
+          <Link to="store-stock">
+            <button className="text-white py-2 mt-4 sm:mt-6 rounded-lg bg-purple-600 hover:bg-purple-700 transition-all w-full">
+              View Stock
+            </button>
+          </Link>
         </div>
 
-        {/* Action Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-8">
-          {/* Manage Stock Card */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-all">
-            <div className="flex items-center gap-2">
-              <Package className="text-purple-500 text-4xl" />
-              <h3 className="text-gray-800 text-xl font-medium">Manage Stock</h3>
-            </div>
-            <p className="text-gray-600 mt-2 leading-relaxed">
-              Check items in stock, track low inventory, and reorder seamlessly.
-            </p>
-            {/* <p className="text-gray-700 mt-2 font-medium">
-              Out of Stock:{' '}
-              <span className="text-purple-600 font-semibold">6 Items</span>
-            </p> */}
-            <Link to="store-stock">
-              <button className="text-white py-2 mt-4 rounded-lg bg-purple-600 hover:bg-purple-700 transition-all w-full">
-                View Stock
-              </button>
-            </Link>
+        {/* Generate Bill Card */}
+        <div className="bg-green-50 p-4 sm:p-6 rounded-lg border border-green-200 shadow-md hover:shadow-lg transition-all">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <ReceiptIndianRupee className="text-green-600 text-4xl sm:text-5xl" />
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Generate Bill</h3>
           </div>
-
-          {/* Generate Bill Card */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-all">
-            <div className="flex items-center gap-2">
-              <ReceiptIndianRupee className="text-green-500 text-4xl" />
-              <h3 className="text-gray-800 text-xl font-medium">Generate Bill</h3>
-            </div>
-            <p className="text-gray-600 mt-2 leading-relaxed">
-              Create bills quickly and share them with customers via WhatsApp.
-            </p>
-            <Link to="/make-bill">
-              <button className="text-white py-2 mt-4 rounded-lg bg-green-600 hover:bg-green-700 transition-all w-full">
-                Make Bill
-              </button>
-            </Link>
-          </div>
-
-          {/* View Sales Card */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-all">
-            <div className="flex items-center gap-2">
-              <ChartNoAxesCombined className="text-yellow-500 text-4xl" />
-              <h3 className="text-gray-800 text-xl font-medium">View Sales</h3>
-            </div>
-            <p className="text-gray-600 mt-2 leading-relaxed">
-              Analyze your sales trends and track daily, weekly, and monthly
-              performance.
-            </p>
-            {/* <p className="text-gray-700 mt-2 font-medium">
-              Today's Sales:{' '}
-              <span className="text-yellow-600 font-semibold">₹1,00,000</span>
-            </p> */}
-            <Link to="view-sales">
-              <button className="text-white py-2 mt-4 rounded-lg bg-yellow-600 hover:bg-yellow-700 transition-all w-full">
-                View Details
-              </button>
-            </Link>
-          </div>
+          <p className="text-sm sm:text-base text-gray-600 mt-4 leading-relaxed">
+            Create bills quickly and share them with customers via WhatsApp.
+          </p>
+          <Link to="/make-bill">
+            <button className="text-white py-2 mt-4 sm:mt-6 rounded-lg bg-green-600 hover:bg-green-700 transition-all w-full">
+              Make Bill
+            </button>
+          </Link>
         </div>
+
+        {/* View Sales Card */}
+        <div className="bg-yellow-50 p-4 sm:p-6 rounded-lg border border-yellow-200 shadow-md hover:shadow-lg transition-all">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <ChartNoAxesCombined className="text-yellow-600 text-4xl sm:text-5xl" />
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-800">View Sales</h3>
+          </div>
+          <p className="text-sm sm:text-base text-gray-600 mt-4 leading-relaxed">
+            Analyze your sales trends and track daily, weekly, and monthly performance.
+          </p>
+          <Link to="view-sales">
+            <button className="text-white py-2 mt-4 sm:mt-6 rounded-lg bg-yellow-600 hover:bg-yellow-700 transition-all w-full">
+              View Details
+            </button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

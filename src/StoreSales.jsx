@@ -7,7 +7,6 @@ import { CircleArrowLeft } from "lucide-react";
 import BillsGrid from "./components/BillsGrid";
 
 const StoreSales = () => {
-
   const [billsLoading, setBillsLoading] = useState(true);
   const [bills, setBills] = useState(null);
   const { user } = useContext(UserContext);
@@ -25,9 +24,9 @@ const StoreSales = () => {
         setBills(billsArray);
         setBillsLoading(false);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    };
     fetchBills();
   }, []);
 
@@ -59,16 +58,21 @@ const StoreSales = () => {
     } finally {
       setBillsLoading(false);
     }
-  }
+  };
 
   if (billsLoading) return null;
 
   return (
-    <section className="p-4 min-h-screen">
-      <h2 className="text-2xl font-semibold text-amber-600 mb-10 mt-2 flex items-center">
-        <Link to="/"><CircleArrowLeft size={32} /></Link> <span className="flex-1 text-center">View Sales</span>
+    <section className="p-4 bg-purple-50 min-h-screen">
+      {/* Page Title */}
+      <h2 className="text-2xl font-semibold text-purple-700 mb-6 mt-4 flex items-center gap-2 justify-start">
+        <Link to="/">
+          <CircleArrowLeft size={30} className="text-purple-700 hover:text-purple-600 transition-all" />
+        </Link>
+        <span className="mx-16">View Sales</span>
       </h2>
-      <form onSubmit={searchBillsByMobileNumber} className="mb-6">
+
+      <form onSubmit={searchBillsByMobileNumber} className="mb-8">
         <label htmlFor="customerNumber" className="sr-only">
           Search bill
         </label>
@@ -77,7 +81,7 @@ const StoreSales = () => {
           name="customerNumber"
           type="number"
           placeholder="Search bill by Mobile Number"
-          className="w-full px-4 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+          className="w-full px-6 py-3 border border-purple-200 bg-white rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
         />
       </form>
       <BillsGrid bills={bills} />

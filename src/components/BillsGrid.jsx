@@ -6,7 +6,7 @@ const BillsGrid = ({ bills }) => {
             {bills.map((bill) => (
                 <Link to={`/customer-invoice/${bill.id}`} key={bill.id}>
                     <div
-                        className="flex flex-col bg-white shadow-sm rounded-lg p-4 border hover:shadow-lg transition-all"
+                        className="flex flex-col bg-white shadow-md rounded-md p-4 border hover:shadow-lg transition-all"
                     >
                         {/* Customer Name */}
                         <p className="text-xs text-gray-500">{bill.customerInfo.customerName}</p>

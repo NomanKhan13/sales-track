@@ -6,7 +6,7 @@ import Navbar from "../src/components/Navbar";
 import { UserContext } from "./contexts/UserContext.jsx";
 
 const AppLayout = () => {
-  const [username, setUsername] = useState("");
+  const [shopData, setShopData] = useState("");
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -15,7 +15,9 @@ const AppLayout = () => {
       const userRef = ref(db, `shops/${user.uid}`);
       const userSnap = await get(userRef);
       if (userSnap.exists()) {
-        setUsername(userSnap.val().shopOwner);
+        const {shopLocation, shopName, shopOwner} = userSnap.val();
+        const shopData = {shopLocation, shopName, shopOwner};
+        setShopData(shopData);
       }
     };
     fetchUsername();
@@ -23,10 +25,10 @@ const AppLayout = () => {
 
   return (
     <div>
-      <Navbar username={username} />
+      <Navbar username={shopData.shopOwner} />
       <div className="bg-blue-50 flex items-center justify-center">
         <main className="container">
-          <Outlet context={{ username }} />
+          <Outlet context={{ shopData }} />
         </main>
       </div>
     </div>
