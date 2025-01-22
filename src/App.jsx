@@ -53,7 +53,8 @@ function App() {
   }, [user]);
 
   // Handle loading states (authentication + shop existence)
-  if (appLoading || checkingShop || shopExist === null) {
+  if (appLoading || checkingShop ) {
+    console.log(appLoading, checkingShop, !shopExist)
     return (
       <div className='w-screen h-screen flex justify-center items-center text-purple-600'>
         <LoaderCircle className='h-12 w-12 animate-spin' />
