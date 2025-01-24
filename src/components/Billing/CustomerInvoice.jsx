@@ -158,7 +158,8 @@ const CustomerInvoice = () => {
                     <p className="flex items-center justify-between">
                         <span className="font-medium text-gray-800">Pending Amount:</span>
                         <span className="font-semibold text-red-600">
-                            {formatter.format(Number(paymentInfo.pendingAmt)) > 0 ? formatter.format(Number(paymentInfo.pendingAmt).toFixed(2)) : "₹0.00"}
+                            {console.log(formatter.format(Number(paymentInfo.pendingAmt).toFixed(2)))}
+                            {Number(paymentInfo.pendingAmt) > 0 ? formatter.format(Number(paymentInfo.pendingAmt).toFixed(2)) : "₹0.00"}
                         </span>
                     </p>
 

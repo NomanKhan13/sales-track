@@ -4,6 +4,8 @@ import { get, ref } from "firebase/database";
 import { db } from "../../utils/firebase";
 import Fuse from "fuse.js";
 import { Check, Plus, Trash2 } from "lucide-react";
+import clsx from "clsx";
+import { ToastContainer, toast } from "react-toastify";
 
 const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerProducts }) => {
     const [searchedProducts, setSearchedProducts] = useState([]);
@@ -60,12 +62,14 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
                 {searchedProducts.length == 0 && <p className="text-sm text-gray-900">Start searching for products...</p>}
                 <ul>
                     {searchedProducts.map((product) => (
-                        <li key={product.id} className="flex justify-between items-center py-2 border-b">
+                        <li key={product.id} className={clsx("flex justify-between items-center p-2 rounded-md mt-2", Number(product.quantity) <= 0 ? "border border-red-500" : "border-b")}>
                             <div>
                                 <p className="font-medium">{product.name}</p>
                                 <p className="text-sm text-gray-500">Price: {formatter.format(Number(product.price))}</p>
+                                <p className="text-sm text-amber-500">Stock: {product.quantity}</p>
                             </div>
                             <button
+                                disabled={!product.quantity}
                                 onClick={() => handleCustomerProducts(product, "ADD")}
                                 className="text-white py-1 px-4 bg-purple-600 rounded-md hover:bg-purple-700"
                             >
@@ -96,10 +100,12 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
                                 <p className="font-medium">{product.name}</p>
                                 <p className="text-sm text-gray-500">Price: {formatter.format(Number(product.price))}</p>
                             </div>
+
                             <div className="flex items-center gap-2">
                                 <input
                                     type="number"
                                     min="1"
+                                    max={Number(product.quantity)}
                                     value={product.cartQty}
                                     onChange={(e) => handleCustomerProducts(product, "UPDATE", { qty: Number(e.target.value) })}
                                     className="w-12 px-2 py-1 border rounded-md"
@@ -118,10 +124,24 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
                 <button type="button" onClick={() => setFormStep(1)} className="flex-1 text-gray-900 py-4 bg-gray-100 hover:bg-gray-300 transition-all">
                     Back
                 </button>
-                <button type="button" onClick={() => setFormStep(3)} className="flex-1 text-white py-4 bg-purple-600 hover:bg-purple-700 transition-all">
+                <button
+                    disabled={customerProducts.length <= 0} type="button"
+                    onClick={() => {
+                        const productWithZeroQty = customerProducts.find((cusProd) => cusProd.cartQty === 0);
+                        console.log(productWithZeroQty)
+
+                        if (productWithZeroQty) {
+                            toast.error(`The product "${productWithZeroQty.name}" has 0 quantity and can't be added.`);
+                            return;
+                        }
+                        setFormStep(3)
+                    }}
+                    className="flex-1 text-white py-4 bg-purple-600 hover:bg-purple-700 transition-all disabled:bg-gray-400">
                     Next
                 </button>
             </div>
+            <ToastContainer position="bottom-center" pauseOnFocusLoss={false} />
+
         </section>
     );
 };

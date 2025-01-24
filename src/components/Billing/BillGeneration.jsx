@@ -3,7 +3,7 @@ import CustomerInfoForm from "./CustomerInfoForm";
 import CustomerProductsForm from "./CustomerProductsForm";
 import CustomerBillAndPayment from "./CustomerBillAndPayment";
 import { UserContext } from "../../contexts/UserContext";
-import { push, ref } from "firebase/database";
+import { get, push, ref, update } from "firebase/database";
 import { db } from "../../utils/firebase";
 import { toast, ToastContainer } from "react-toastify";
 import { Timestamp } from "firebase/firestore";
@@ -79,7 +79,7 @@ const BillGeneration = () => {
         if (action === "UPDATE") {
             const updatedProducts = customerProducts.map((cusProd) =>
                 cusProd.id === product.id
-                    ? { ...cusProd, cartQty: payload.qty }
+                    ? { ...cusProd, cartQty: cusProd.quantity >= payload.qty ? payload.qty : cusProd.quantity }
                     : cusProd
             );
             setCustomerProducts(updatedProducts);
@@ -89,6 +89,7 @@ const BillGeneration = () => {
     const handleCustomerPayment = async (paymentMode, discount, subTotal, grandTotal, paidAmt) => {
         if (!user) return;
         const pendingAmt = grandTotal - paidAmt;
+
         const paymentInfo = {
             paymentMode,
             discount,
@@ -110,6 +111,28 @@ const BillGeneration = () => {
 
         const shopId = user.uid;
         const billsRef = ref(db, `shops/${shopId}/bills`);
+        const inventoryRef = ref(db, `shops/${shopId}/inventory`);
+
+        // Fetch and validate inventory data
+        const inventorySnap = await get(inventoryRef);
+        if (!inventorySnap.exists()) {
+            toast.error("Inventory data is missing. Cannot proceed.");
+            return;
+        }
+        const inventoryData = inventorySnap.val();
+
+        // Validate customer info and products
+        if (!customerInfo || Object.keys(customerInfo).length === 0) {
+            toast.error("Customer information is missing.");
+            return;
+        }
+
+        if (!customerProducts || customerProducts.length === 0) {
+            toast.error("No products selected for the bill.");
+            return;
+        }
+
+
         const billData = {
             customerInfo,
             customerProducts,
@@ -118,17 +141,46 @@ const BillGeneration = () => {
         };
 
         try {
-            const billPromise = push(billsRef, billData);
-            notify(billPromise, "Bill generated successfully!", "Failed to generate bill!");
-            await billPromise; // Wait for the promise to resolve
-            const billId = billPromise.key;
-            console.log(`/customer-invoice/${billId}`);
+            // Generate a new key for the bill
+            const newBillRef = await push(billsRef);
+            const billId = newBillRef.key;
+
+            // Prepare updates for both the bill and inventory
+            const updates = {};
+            updates[`shops/${shopId}/bills/${billId}`] = billData;
+
+            for (const product of customerProducts) {
+                const productId = product.id;
+
+                // Validate product in inventory
+                if (!inventoryData[productId]) {
+                    throw new Error(`Product ${product.name} does not exist in the inventory.`);
+                }
+
+                const newQuantity = inventoryData[productId].quantity - product.cartQty;
+                if (newQuantity < 0) {
+                    throw new Error(`Insufficient stock for product: ${product.name}`);
+                }
+
+                updates[`shops/${shopId}/inventory/${productId}/quantity`] = newQuantity;
+            }
+
+            // Ensure updates are not empty
+            if (Object.keys(updates).length === 0) {
+                throw new Error("No updates to perform.");
+            }
+
+            // Perform the atomic update
+            await update(ref(db), updates);
+
+            toast.success("Bill generated successfully!");
             navigate(`/customer-invoice/${billId}`);
         } catch (error) {
-            console.error("Error generating bill:", error);
-            toast.error("An error occurred while generating the bill.");
+            console.error("Error generating bill and updating inventory:", error);
+            toast.error("An error occurred while generating the bill and updating inventory.");
         }
     };
+
 
     return (
         <section className="min-h-screen bg-purple-50 p-4 mb-20">

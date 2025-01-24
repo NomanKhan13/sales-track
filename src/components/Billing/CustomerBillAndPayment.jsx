@@ -164,13 +164,13 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                     </p>
                 </div>
             </section>
-
+                        {console.log(!amount.paidAmt)}
             <div className="flex fixed bottom-0 left-0 w-full border-t border-gray-900">
                 <button onClick={() => setFormStep(2)} className="flex-1 text-gray-900 py-4 bg-gray-100 hover:bg-gray-300 transition-all">
                     Back
                 </button>
-                <button onClick={() => { handleCustomerPayment(paymentMode, discount, subTotal, grandTotal, amount.paidAmt, amount.pendingAmt) }}
-                    className="flex-1 text-white py-4 bg-purple-600 hover:bg-purple-700 transition-all">
+                <button disabled={!paymentMode || !amount.paidAmt} onClick={() => { handleCustomerPayment(paymentMode, discount, subTotal, grandTotal, amount.paidAmt, amount.pendingAmt) }}
+                    className="flex-1 text-white py-4 bg-purple-600 hover:bg-purple-700 transition-all disabled:bg-gray-400">
                     Generate Bill
                 </button>
             </div>

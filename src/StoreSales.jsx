@@ -16,55 +16,70 @@ const StoreSales = () => {
     const fetchBills = async () => {
       if (!shopId) return;
       try {
-        const billsRef = ref(db, `shops/${shopId}/bills`);
+        const billsRef = query(ref(db, `shops/${shopId}/bills`), limitToLast(20));
         const billsSnap = await get(billsRef);
-        if (!billsSnap.exists()) setBills([]);
+
+        if (!billsSnap.exists()) {
+          setBills([]);
+          setBillsLoading(false);
+          return;
+        }
+
         const billsData = billsSnap.val();
-        const billsArray = Object.entries(billsData).map(([key, value]) => ({ id: key, ...value }));
+        const billsArray = Object.entries(billsData)
+          .map(([key, value]) => ({ id: key, ...value }))
+          .sort((a, b) => new Date(b.createdBillAt || 0) - new Date(a.createdBillAt || 0)); // Safe sorting
+
         setBills(billsArray);
-        setBillsLoading(false);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching bills:", error);
+      } finally {
+        setBillsLoading(false);
       }
     };
+
     fetchBills();
-  }, []);
+  }, [shopId]);
 
   const searchBillsByMobileNumber = async (e) => {
     e.preventDefault();
     const mobileNumber = e.target.elements["customerNumber"].value;
+
     try {
       setBillsLoading(true);
       const billRef = ref(db, `shops/${shopId}/bills`);
       let queryRef;
+
       if (!mobileNumber) {
-        queryRef = query(billRef, limitToLast(10));
+        queryRef = query(billRef, limitToLast(20));
       } else {
         queryRef = query(billRef, orderByChild("customerInfo/customerNumber"), equalTo(mobileNumber));
       }
+
       const billSnap = await get(queryRef);
+
       if (billSnap.exists()) {
         const billsData = billSnap.val();
-        const billsArray = Object.entries(billsData).map(([key, value]) => ({ id: key, ...value }));
-        console.log("Matching Bills:", billsArray);
+        const billsArray = Object.entries(billsData)
+          .map(([key, value]) => ({ id: key, ...value }))
+          .sort((a, b) => new Date(b.createdBillAt || 0) - new Date(a.createdBillAt || 0)); // Safe sorting
+
         setBills(billsArray);
       } else {
-        console.log("No matching bills found for the provided mobile number.");
-        return null;
+        setBills([]);
       }
     } catch (error) {
       console.error("Error searching for bills:", error);
-      throw error;
     } finally {
       setBillsLoading(false);
     }
   };
 
-  if (billsLoading) return null;
+  if (billsLoading)
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
 
   return (
     <section className="p-4 bg-purple-50 min-h-screen">
-      {/* Page Title */}
       <h2 className="text-2xl font-semibold text-purple-700 mb-6 mt-4 flex items-center gap-2 justify-start">
         <Link to="/">
           <CircleArrowLeft size={30} className="text-purple-700 hover:text-purple-600 transition-all" />
@@ -84,6 +99,11 @@ const StoreSales = () => {
           className="w-full px-6 py-3 border border-purple-200 bg-white rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
         />
       </form>
+
+      {bills?.length === 0 && (
+        <div className="text-center text-gray-500 mt-8">No bills found.</div>
+      )}
+
       <BillsGrid bills={bills} />
     </section>
   );
