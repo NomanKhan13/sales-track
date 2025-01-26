@@ -90,6 +90,7 @@ const BillGeneration = () => {
         if (!user) return;
         const pendingAmt = grandTotal - paidAmt;
 
+        const createdBillAt = Timestamp.now().toDate().toISOString();
         const paymentInfo = {
             paymentMode,
             discount,
@@ -97,6 +98,7 @@ const BillGeneration = () => {
             grandTotal,
             paidAmt,
             pendingAmt,
+            createdBillAt
         };
 
         setCustomerPayment((prevState) => ({
@@ -137,7 +139,7 @@ const BillGeneration = () => {
             customerInfo,
             customerProducts,
             paymentInfo,
-            createdBillAt: Timestamp.now().toDate().toISOString(),
+            createdBillAt
         };
 
         try {

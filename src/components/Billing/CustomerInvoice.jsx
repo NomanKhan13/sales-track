@@ -71,6 +71,9 @@ const CustomerInvoice = () => {
         html2pdf().set(opt).from(invoiceRef.current).save();
     }
 
+    const totalAmountPaid = Number(paymentInfo.paidAmt) + paymentInfo?.newPayments?.reduce((acc, entry) => entry.paymentAmount + acc ,0) || Number(paymentInfo.paidAmt);
+    console.log(totalAmountPaid);
+
     return (
         <div className="bg-purple-50 min-h-screen p-6" ref={invoiceRef}>
             {/* Header Section */}
@@ -152,7 +155,7 @@ const CustomerInvoice = () => {
                     <p className="flex items-center justify-between">
                         <span className="font-medium text-gray-800">Amount Paid:</span>
                         <span className="font-semibold text-green-600">
-                            {formatter.format(Number(paymentInfo.paidAmt)) || "0.00"}
+                            {formatter.format(Number(totalAmountPaid)) || formatter.format(Number(paymentInfo.paidAmt)) || "0.00"}
                         </span>
                     </p>
                     <p className="flex items-center justify-between">
