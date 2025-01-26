@@ -35,14 +35,14 @@ const BillsGrid = ({ bills }) => {
                     <div className="flex items-center gap-2">
                         <Link className="flex-1" to={`/customer-invoice/${bill.id}`}>
                             <button
-                                className="mt-4 py-2 px-4 w-full rounded-md bg-teal-600 text-white text-sm font-medium hover:bg-teal-700 transition-all"
+                                className="mt-4 py-2 px-4 w-full rounded-md bg-purple-600 text-white text-sm font-medium hover:bg-purple-700 transition-all"
                             >
                                 Download Bill
                             </button>
                         </Link>
                         <Link className="flex-1" to={`/edit-bill/${bill.id}`}>
                             <button
-                                className="mt-4 py-2 px-4 w-full rounded-md bg-purple-600 text-white text-sm font-medium hover:bg-purple-700 transition-all"
+                                className="mt-4 py-2 px-4 w-full rounded-md bg-teal-600 text-white text-sm font-medium hover:bg-teal-700 transition-all"
                             >
                                 Edit Bill
                             </button>

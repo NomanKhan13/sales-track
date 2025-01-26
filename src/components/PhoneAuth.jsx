@@ -128,7 +128,7 @@ const PhoneAuth = () => {
     }
 
     return (
-        <div className="px-6 pt-24 h-screen bg-purple-50">
+        <div className="px-6 flex flex-col justify-center min-h-screen bg-gray-50">
             <TrendingUp className="text-purple-500 mx-auto h-32 w-32" />
             <h2 className="text-2xl font-bold text-center mb-12 text-gray-700">Welcome to SalesTrack</h2>
 

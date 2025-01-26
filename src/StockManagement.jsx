@@ -61,11 +61,11 @@ const StockManagement = () => {
   };
 
   return (
-    <main className="min-h-screen bg-purple-50 container mx-auto p-4 pb-20">
+    <main className="min-h-screen bg-gray-50 container mx-auto p-4 pb-20">
       {/* Page Title */}
-      <h2 className="text-2xl font-semibold text-purple-700 mb-6 mt-4 flex items-center gap-2 justify-start">
+      <h2 className="text-2xl font-semibold text-gray-700 mb-6 mt-4 flex items-center gap-2 justify-start">
         <Link to="/">
-          <CircleArrowLeft size={30} className="text-purple-700 hover:text-purple-600 transition-all" />
+          <CircleArrowLeft size={30} className="text-gray-700 hover:text-gray-600 transition-all" />
         </Link>
         <span className="mx-16">Manage Stock</span>
       </h2>
@@ -101,7 +101,7 @@ const StockManagement = () => {
           {searchResults.map((item) => (
             <div
               key={item.id}
-              className={`flex flex-col bg-white shadow-md rounded-lg p-4 border ${item.quantity === 0 ? "border-red-500" : "border-gray-200"
+              className={`flex flex-col bg-white shadow-md rounded-lg p-4 border ${item.quantity === 0 ? "border-red-500" : "border-gray-300"
                 }`}
             >
               <h3 className="text-lg font-medium text-gray-800 truncate">{item.name}</h3>

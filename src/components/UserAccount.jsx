@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+import { Link, useNavigate, useOutletContext } from "react-router";
 import { signOut } from "firebase/auth";
 import { ref, onValue } from "firebase/database";
 import { auth, db } from "../utils/firebase";
+import { CircleArrowLeft } from "lucide-react";
 
 const UserAccount = ({ userId }) => {
     const { shopData } = useOutletContext();
@@ -20,11 +21,14 @@ const UserAccount = ({ userId }) => {
 
 
     return (
-        <section className="bg-purple-50 min-h-screen p-6">
+        <section className="bg-gray-50 min-h-screen p-6">
             <div className="max-w-lg mx-auto space-y-6">
                 {/* Title */}
-                <h2 className="text-2xl font-semibold text-purple-700 text-center">
-                    User Account
+                <h2 className="text-2xl font-semibold text-gray-700 mb-6 mt-4 flex items-center gap-2 justify-start">
+                    <Link to="/">
+                        <CircleArrowLeft size={30} className="text-gray-700 hover:text-gray-600 transition-all" />
+                    </Link>
+                    <span className="mx-16">User Account</span>
                 </h2>
 
                 {/* Shop Details */}

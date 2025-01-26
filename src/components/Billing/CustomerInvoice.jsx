@@ -18,7 +18,7 @@ const CustomerInvoice = () => {
         const getBillData = async () => {
             try {
                 if (!user || !billId) return;
-                const shopId = user.uid; // Add shopId from user context
+                const shopId = user.uid;
                 const billRef = ref(db, `shops/${shopId}/bills/${billId}`);
                 const billSnap = await get(billRef);
                 if (!billSnap.exists()) return;
@@ -36,11 +36,11 @@ const CustomerInvoice = () => {
         style: 'currency',
         currency: 'INR',
     });
-    
+
     if (billLoading) {
         return (
-            <div className='w-screen h-[40rem] flex justify-center items-center text-purple-600'>
-                <LoaderCircle className='h-12 w-12 animate-spin' />
+            <div className="w-screen h-[40rem] flex justify-center items-center text-purple-600">
+                <LoaderCircle className="h-12 w-12 animate-spin" />
             </div>
         );
     }
@@ -60,7 +60,7 @@ const CustomerInvoice = () => {
 
     const getInvoicePDF = () => {
         if (!invoiceRef) return;
-        let opt = {
+        const opt = {
             margin: 1,
             filename: 'invoice.pdf',
             image: { type: 'jpeg', quality: 0.98 },
@@ -69,16 +69,18 @@ const CustomerInvoice = () => {
             pagebreak: { mode: 'avoid-all' }
         };
         html2pdf().set(opt).from(invoiceRef.current).save();
-    }
+    };
 
-    const totalAmountPaid = Number(paymentInfo.paidAmt) + paymentInfo?.newPayments?.reduce((acc, entry) => entry.paymentAmount + acc ,0) || Number(paymentInfo.paidAmt);
-    console.log(totalAmountPaid);
+    const totalAmountPaid =
+        Number(paymentInfo.paidAmt) +
+        paymentInfo?.newPayments?.reduce((acc, entry) => entry.paymentAmount + acc, 0) ||
+        Number(paymentInfo.paidAmt);
 
     return (
-        <div className="bg-purple-50 min-h-screen p-6" ref={invoiceRef}>
+        <div className="bg-gray-50 min-h-screen p-6" ref={invoiceRef}>
             {/* Header Section */}
             <div className="text-center mb-12">
-                <h1 className="text-3xl font-medium text-purple-600">
+                <h1 className="text-3xl font-semibold text-gray-800">
                     {shopData.shopName}
                 </h1>
                 <p className="text-lg text-gray-700">{shopData.shopLocation}</p>
@@ -87,8 +89,8 @@ const CustomerInvoice = () => {
                 </p>
             </div>
 
-            {/* Customer Details Card */}
-            <div className="mb-8 border border-gray-300 p-4 rounded-md">
+            {/* Customer Details */}
+            <div className="mb-8 border border-gray-300 p-4 rounded-md shadow-sm">
                 <h2 className="text-xl font-medium text-purple-600 mb-4">
                     Customer Details
                 </h2>
@@ -105,22 +107,20 @@ const CustomerInvoice = () => {
                 </div>
             </div>
 
-            {/* Products Card */}
-            <div className="border-t border-gray-300 mb-8 pt-4">
+            {/* Products List */}
+            <div className="mb-8 border border-gray-300 rounded-md p-4">
                 <h2 className="text-xl font-medium text-purple-600 mb-4">
-                    Customer Products
+                    Products
                 </h2>
-                <ul className="mt-4 space-y-4">
+                <ul className="space-y-4">
                     {customerProducts.length > 0 ? (
                         customerProducts.map((product) => (
                             <div
                                 key={product.id}
-                                className="flex items-center justify-between bg-white p-4 rounded-md shadow-sm border border-gray-200"
+                                className="flex justify-between items-center bg-white p-4 rounded-md border border-gray-200"
                             >
                                 <div>
-                                    <p className="text-gray-800 font-medium">
-                                        {product.name}
-                                    </p>
+                                    <p className="text-gray-800 font-medium">{product.name}</p>
                                     <p className="text-sm text-gray-500">
                                         {formatter.format(Number(product.price))} x {product.cartQty}
                                     </p>
@@ -136,43 +136,42 @@ const CustomerInvoice = () => {
                 </ul>
             </div>
 
-            {/* Payment Details Card */}
-            <div className="mb-8 border-t border-gray-300 pt-4">
+            {/* Payment Details */}
+            <div className="mb-8 border border-gray-300 p-4 rounded-md shadow-sm">
                 <h2 className="text-xl font-medium text-purple-600 mb-4">
                     Payment Details
                 </h2>
-                <div className="space-y-4">
-                    <p className="flex items-center justify-between text-base">
-                        <span>Payment Mode:</span> <span>{paymentInfo.paymentMode || "N/A"}</span>
+                <div className="space-y-2">
+                    <p className="flex justify-between text-base">
+                        <span>Payment Mode:</span>
+                        <span>{paymentInfo.paymentMode || "N/A"}</span>
                     </p>
-                    <p className="flex items-center justify-between text-base">
-                        <span>Subtotal:</span> <span>{formatter.format(Number(paymentInfo.subTotal)) || "0.00"}</span>
+                    <p className="flex justify-between text-base">
+                        <span>Subtotal:</span>
+                        <span>{formatter.format(Number(paymentInfo.subTotal)) || "0.00"}</span>
                     </p>
-                    <p className="flex items-center justify-between text-base">
-                        <span>Discount:</span> <span>{paymentInfo.discount || "0"}%</span>
+                    <p className="flex justify-between text-base">
+                        <span>Discount:</span>
+                        <span>{paymentInfo.discount || "0"}%</span>
                     </p>
-
-                    <p className="flex items-center justify-between">
-                        <span className="font-medium text-gray-800">Amount Paid:</span>
-                        <span className="font-semibold text-green-600">
-                            {formatter.format(Number(totalAmountPaid)) || formatter.format(Number(paymentInfo.paidAmt)) || "0.00"}
+                    <p className="flex justify-between font-medium text-gray-800">
+                        <span>Amount Paid:</span>
+                        <span className="text-green-600">
+                            {formatter.format(totalAmountPaid)}
                         </span>
                     </p>
-                    <p className="flex items-center justify-between">
-                        <span className="font-medium text-gray-800">Pending Amount:</span>
-                        <span className="font-semibold text-red-600">
-                            {console.log(formatter.format(Number(paymentInfo.pendingAmt).toFixed(2)))}
-                            {Number(paymentInfo.pendingAmt) > 0 ? formatter.format(Number(paymentInfo.pendingAmt).toFixed(2)) : "₹0.00"}
+                    <p className="flex justify-between font-medium text-gray-800">
+                        <span>Pending Amount:</span>
+                        <span className="text-red-600">
+                            {Number(paymentInfo.pendingAmt) > 0
+                                ? formatter.format(Number(paymentInfo.pendingAmt).toFixed(2))
+                                : "₹0.00"}
                         </span>
                     </p>
-
-                    <p className="flex items-center justify-between border-t border-slate-300 pt-1">
-                        <span className="font-medium text-gray-800">Grand Total:</span>
-                        <span className="font-semibold text-2xl text-purple-600">
-                            {formatter.format(Number(paymentInfo.grandTotal)) || "0.00"}
-                        </span>
+                    <p className="flex justify-between text-lg font-semibold text-purple-600">
+                        <span>Grand Total:</span>
+                        <span>{formatter.format(Number(paymentInfo.grandTotal)) || "0.00"}</span>
                     </p>
-
                 </div>
             </div>
 
@@ -181,7 +180,10 @@ const CustomerInvoice = () => {
                 <p className="text-lg text-gray-700 mb-4">
                     Thank you for shopping with us!
                 </p>
-                <button data-html2canvas-ignore onClick={getInvoicePDF} className="bg-purple-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-purple-700">
+                <button
+                    onClick={getInvoicePDF}
+                    className="bg-purple-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-purple-700"
+                >
                     Download Invoice
                 </button>
             </div>
@@ -190,5 +192,3 @@ const CustomerInvoice = () => {
 };
 
 export default CustomerInvoice;
-
-

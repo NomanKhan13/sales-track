@@ -185,18 +185,18 @@ const BillGeneration = () => {
 
 
     return (
-        <section className="min-h-screen bg-purple-50 p-4 mb-20">
+        <section className="min-h-screen bg-gray-50 p-4 mb-20">
             {/* Page Title */}
-            <h2 className="text-2xl font-semibold text-purple-700 mb-6 mt-4 flex items-center gap-2 justify-start">
+            <h2 className="text-2xl font-semibold text-gray-600 mb-6 mt-4 flex items-center gap-2 justify-start">
                 <Link to="/">
-                    <CircleArrowLeft size={30} className="text-purple-700 hover:text-purple-600 transition-all" />
+                    <CircleArrowLeft size={30} className="text-gray-600 hover:text-gray-600 transition-all" />
                 </Link>
-                <span className="mx-16">Generate Bill</span>
+                <span className="mx-16 text-gray-600">Generate Bill</span>
             </h2>
 
-            <div className="space-y-6">
+            <div>
                 <section className="mt-6">
-                    <h2 className="text-lg font-medium text-gray-600">
+                    <h2 className="text-lg mb-4 mt-2 font-medium text-gray-800">
                         {formStep == 1 && "Step 1 of 3: Customer Information"}
                         {formStep == 2 && "Step 2 of 3: Add Products"}
                         {formStep == 3 && "Step 3 of 3: Bill Review & Payment"}

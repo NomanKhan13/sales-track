@@ -62,8 +62,8 @@ const PaymentHistoryCard = ({ billData, shopId, billId }) => {
             setError("An error occurred while adding the payment. Please try again.");
         }
     };
-    
-    const totalAmountPaid = Number(paidAmt) + newPayments?.reduce((acc, entry) => entry.paymentAmount + acc ,0) || Number(paidAmt);
+
+    const totalAmountPaid = Number(paidAmt) + newPayments?.reduce((acc, entry) => entry.paymentAmount + acc, 0) || Number(paidAmt);
 
     return (
         <div className="mb-8 p-4 shadow-md rounded-md bg-white">
@@ -184,11 +184,13 @@ const EditBill = () => {
 
     return (
         <div className="max-w-4xl mx-auto min-h-screen p-4">
-            <h2 className="text-2xl font-semibold text-purple-700 mb-6 mt-4 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-gray-700 mb-6 mt-4 flex items-center gap-2">
                 <Link to="/view-sales">
-                    <CircleArrowLeft size={30} className="text-purple-700 hover:text-purple-600" />
+                    <CircleArrowLeft size={30} className="text-gray-700 hover:text-gray-600" />
                 </Link>
-                Edit Bill
+                <span className="mx-20">
+                    Edit Bill
+                </span>
             </h2>
             <PaymentHistoryCard billData={billData} shopId={shopId} billId={billId} />
         </div>

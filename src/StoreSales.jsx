@@ -76,13 +76,20 @@ const StoreSales = () => {
   };
 
   if (billsLoading)
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return(
+      <div className="p-4 mt-16">
+        <div className="animate-pulse mb-8 bg-gray-300 rounded-md shadow w-full h-12"></div>
+        <div className="space-y-4">
+        {[1,2,3,4,5,6].map(ele => <div className="animate-pulse bg-gray-300 rounded-md shadow w-full h-24"></div> )}
+        </div>
+      </div>
+    );
 
   return (
-    <section className="p-4 bg-purple-50 min-h-screen">
-      <h2 className="text-2xl font-semibold text-purple-700 mb-6 mt-4 flex items-center gap-2 justify-start">
+    <section className="p-4 bg-gray-50 min-h-screen">
+      <h2 className="text-2xl font-semibold text-gray-700 mb-6 mt-4 flex items-center gap-2 justify-start">
         <Link to="/">
-          <CircleArrowLeft size={30} className="text-purple-700 hover:text-purple-600 transition-all" />
+          <CircleArrowLeft size={30} className="text-gray-700 hover:text-gray-600 transition-all" />
         </Link>
         <span className="mx-16">View Sales</span>
       </h2>

@@ -19,16 +19,16 @@ const Dashboard = () => {
       {/* Action Cards */}
       <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 py-6 sm:py-10">
         {/* Manage Stock Card */}
-        <div className="bg-purple-50 p-4 sm:p-6 rounded-lg border border-purple-200 shadow-md hover:shadow-lg transition-all">
+        <div className="bg-blue-50 p-4 sm:p-6 rounded-lg border border-blue-200 shadow-md hover:shadow-lg transition-all">
           <div className="flex items-center gap-3 sm:gap-4">
-            <Package className="text-purple-600 text-4xl sm:text-5xl" />
+            <Package className="text-blue-600 text-4xl sm:text-5xl" />
             <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Manage Stock</h3>
           </div>
           <p className="text-sm sm:text-base text-gray-600 mt-4 leading-relaxed">
             Check items in stock, track low inventory, and reorder seamlessly.
           </p>
           <Link to="store-stock">
-            <button className="text-white py-2 mt-4 sm:mt-6 rounded-lg bg-purple-600 hover:bg-purple-700 transition-all w-full">
+            <button className="text-white py-2 mt-4 sm:mt-6 rounded-lg bg-blue-600 hover:bg-blue-700 transition-all w-full">
               View Stock
             </button>
           </Link>
