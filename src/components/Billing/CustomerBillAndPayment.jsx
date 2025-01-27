@@ -124,9 +124,9 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                         />
                     </div>
 
-                    <form className="mt-4 space-y-4">
+                    
                         {/* Amount paid */}
-                        <div>
+                        <div className="mt-4 space-y-4">
                             <label htmlFor="paidAmt" className="block text-sm pb-2">
                                 Amount Paid
                             </label>
@@ -142,7 +142,6 @@ const CustomerBillAndPayment = ({ setFormStep, customerInfo, customerProducts, h
                                 className="w-full px-4 py-2 border bg-gray-50 border-gray-300 bg-gray-50 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                             />
                         </div>
-                    </form>
                 </div>
             </section>
 
