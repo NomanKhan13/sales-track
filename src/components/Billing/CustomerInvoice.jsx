@@ -181,6 +181,7 @@ const CustomerInvoice = () => {
                     Thank you for shopping with us!
                 </p>
                 <button
+                    data-html2canvas-ignore
                     onClick={getInvoicePDF}
                     className="bg-purple-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-purple-700"
                 >
