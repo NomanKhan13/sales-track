@@ -37,7 +37,8 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
         e.preventDefault();
         const formData = new FormData(e.target);
         const searchTerms = formData.get("search").trim().split("#");
-        const searchedProducts = searchTerms.map(term => fuseRef.current.search(term)).flat().map(result => ({ ...result.item, isInCart: customerProducts.some(cusProd => cusProd.id === result.item.id) }));
+        const searchedProducts = searchTerms.map(term => fuseRef.current.search(term)).flat().map(result => ({ ...result.item, isInCart: customerProducts.some(cusProd => cusProd.id === result.item.id ? console.log(true) : console.log(false)) }));
+        console.log(searchedProducts)
         setSearchedProducts(searchedProducts);
     };
 
@@ -63,6 +64,7 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
                 <ul>
                     {searchedProducts.map((product) => (
                         <li key={product.id} className={clsx("flex justify-between items-center p-2 rounded-md mt-2", Number(product.quantity) <= 0 ? "border border-red-500" : "border-b")}>
+                            {console.log(product)}
                             <div>
                                 <p className="font-medium">{product.name}</p>
                                 <p className="text-sm text-gray-500">Price: {formatter.format(Number(product.price))}</p>

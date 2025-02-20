@@ -24,14 +24,14 @@ const AppLayout = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <Navbar username={shopData.shopOwner} />
       <div className="bg-gray-50 flex items-center justify-center">
         <main className="container">
           <Outlet context={{ shopData }} />
         </main>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -185,7 +185,7 @@ const BillGeneration = () => {
 
 
     return (
-        <section className="min-h-screen bg-gray-50 p-4 mb-20">
+        <section className="max-w-xl w-full mx-auto min-h-screen bg-gray-50 p-4 mb-20">
             {/* Page Title */}
             <h2 className="text-2xl font-semibold text-gray-600 mb-6 mt-4 flex items-center gap-2 justify-start">
                 <Link to="/">

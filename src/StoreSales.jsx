@@ -16,7 +16,7 @@ const StoreSales = () => {
     const fetchBills = async () => {
       if (!shopId) return;
       try {
-        const billsRef = query(ref(db, `shops/${shopId}/bills`), limitToLast(20));
+        const billsRef = query(ref(db, `shops/${shopId}/bills`));
         const billsSnap = await get(billsRef);
 
         if (!billsSnap.exists()) {
