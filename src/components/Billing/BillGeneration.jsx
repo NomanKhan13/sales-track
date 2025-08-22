@@ -191,7 +191,7 @@ const BillGeneration = () => {
                 <Link to="/">
                     <CircleArrowLeft size={30} className="text-gray-600 hover:text-gray-600 transition-all" />
                 </Link>
-                <span className="mx-16 text-gray-600">Generate Bill</span>
+                <span className="">Generate Bill</span>
             </h2>
 
             <div>

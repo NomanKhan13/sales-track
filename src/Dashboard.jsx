@@ -6,7 +6,7 @@ const Dashboard = () => {
   const { shopData } = useOutletContext();
 
   return (
-    <div className="bg-gray-50 font-roboto min-h-screen px-4">
+    <div className="bg-gray-50 font-roboto min-h-screen max-w-xl mx-auto px-4">
       <div className="py-6 sm:py-10 shadow-sm">
         <h2 className="text-xl sm:text-2xl font-poppins font-semibold text-gray-800">
           Welcome Back, {shopData.shopOwner}!
@@ -17,7 +17,7 @@ const Dashboard = () => {
       </div>
 
       {/* Action Cards */}
-      <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 py-6 sm:py-10">
+      <div className="space-y-6">
         {/* Manage Stock Card */}
         <div className="bg-blue-50 p-4 sm:p-6 rounded-lg border border-blue-200 shadow-md hover:shadow-lg transition-all">
           <div className="flex items-center gap-3 sm:gap-4">

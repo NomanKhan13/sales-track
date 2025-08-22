@@ -87,13 +87,13 @@ const ProductForm = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 container mx-auto p-4">
+    <main className="min-h-screen max-w-xl mx-auto bg-gray-50 container mx-auto p-4">
       {/* Page Title */}
       <h2 className="text-2xl font-semibold text-gray-700 mb-6 mt-4 flex items-center gap-2 justify-start">
         <Link to="/store-stock">
           <CircleArrowLeft size={30} className="text-gray-700 hover:text-gray-600 transition-all" />
         </Link>
-        <span className="mx-16">{productId ? "Edit Product" : "Add Product"}</span>
+        <span className="">{productId ? "Edit Product" : "Add Product"}</span>
       </h2>
 
       {/* Form */}

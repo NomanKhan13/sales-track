@@ -9,7 +9,7 @@ const BillsGrid = ({ bills }) => {
     });
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-6">
             {bills.map((bill) => (
                 // <Link to={`/customer-invoice/${bill.id}`} key={bill.id}>
                 <div

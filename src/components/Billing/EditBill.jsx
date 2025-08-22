@@ -183,12 +183,12 @@ const EditBill = () => {
     if (!billData) return <div>No bill found.</div>;
 
     return (
-        <div className="max-w-4xl mx-auto min-h-screen p-4">
+        <div className="max-w-xl mx-auto min-h-screen p-4">
             <h2 className="text-2xl font-semibold text-gray-700 mb-6 mt-4 flex items-center gap-2">
                 <Link to="/view-sales">
                     <CircleArrowLeft size={30} className="text-gray-700 hover:text-gray-600" />
                 </Link>
-                <span className="mx-20">
+                <span className="">
                     Edit Bill
                 </span>
             </h2>

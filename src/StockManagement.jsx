@@ -61,13 +61,13 @@ const StockManagement = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 container mx-auto p-4 pb-20">
+    <main className="min-h-screen max-w-xl mx-auto bg-gray-50 container mx-auto p-4 pb-20">
       {/* Page Title */}
       <h2 className="text-2xl font-semibold text-gray-700 mb-6 mt-4 flex items-center gap-2 justify-start">
         <Link to="/">
-          <CircleArrowLeft size={30} className="text-gray-700 hover:text-gray-600 transition-all" />
+          <CircleArrowLeft size={28} className="text-gray-700 hover:text-gray-600 transition-all" />
         </Link>
-        <span className="mx-16">Manage Stock</span>
+        <span className="">Manage Stock</span>
       </h2>
 
       {/* Search Bar */}
@@ -97,7 +97,7 @@ const StockManagement = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-6">
           {searchResults.map((item) => (
             <div
               key={item.id}

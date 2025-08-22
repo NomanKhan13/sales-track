@@ -28,7 +28,7 @@ const UserAccount = ({ userId }) => {
                     <Link to="/">
                         <CircleArrowLeft size={30} className="text-gray-700 hover:text-gray-600 transition-all" />
                     </Link>
-                    <span className="mx-16">User Account</span>
+                    <span className="">User Account</span>
                 </h2>
 
                 {/* Shop Details */}
