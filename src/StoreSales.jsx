@@ -80,7 +80,7 @@ const StoreSales = () => {
       <div className="p-4 mt-16">
         <div className="animate-pulse mb-8 bg-gray-300 rounded-md shadow max-w-xl mx-auto h-12"></div>
         <div className="space-y-4">
-        {[1,2,3,4,5,6].map(ele => <div className="animate-pulse bg-gray-300 rounded-md shadow max-w-xl mx-auto h-24"></div> )}
+        {[1,2,3,4,5,6].map((ele, idx) => <div key={idx} className="animate-pulse bg-gray-300 rounded-md shadow max-w-xl mx-auto h-24"></div> )}
         </div>
       </div>
     );

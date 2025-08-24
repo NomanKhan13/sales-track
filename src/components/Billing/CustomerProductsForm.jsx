@@ -37,7 +37,11 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
         e.preventDefault();
         const formData = new FormData(e.target);
         const searchTerms = formData.get("search").trim().split("#");
-        const searchedProducts = searchTerms.map(term => fuseRef.current.search(term)).flat().map(result => ({ ...result.item, isInCart: customerProducts.some(cusProd => cusProd.id === result.item.id ? console.log(true) : console.log(false)) }));
+        const searchedProducts = searchTerms.map(term => fuseRef.current.search(term)).flat().map(result => ({ 
+            ...result.item, 
+            isInCart: customerProducts.some(cusProd => cusProd.id === result.item.id) 
+          }));
+          
         console.log(searchedProducts)
         setSearchedProducts(searchedProducts);
     };
@@ -107,7 +111,7 @@ const CustomerProductsForm = ({ setFormStep, handleCustomerProducts, customerPro
                                 <input
                                     type="number"
                                     min="1"
-                                    max={Number(product.quantity)}
+                                    maxLength={Number(product.quantity)}
                                     value={product.cartQty}
                                     onChange={(e) => handleCustomerProducts(product, "UPDATE", { qty: Number(e.target.value) })}
                                     className="w-12 px-2 py-1 border rounded-md"
